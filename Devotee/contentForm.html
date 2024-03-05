@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+    background-color: #dcdfe2;
+    background-image: url('/images/bACK\ gROUND\ 02.jpg'); /* Add your background image URL here */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    }
+    .content-form {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #716c8b;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <title>Content Registration Form</title>
+</head>
+<body>
+
+  <div class="container">
+    <div class="content-form">
+      <h2 class="text-center mb-4">Content Form</h2>
+      <form>
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+
+        <div class="form-group">
+          <label for="book">Book:</label>
+          <input type="text" class="form-control" id="book" name="book" required>
+        </div>
+
+        
+
+        <!-- <div class="form-group">
+          <label for="bhajan">Bhajan:</label>
+          <input type="text" class="form-control" id="bhajan" name="bhajan" required>
+        </div> -->
+
+        <div class="form-group">
+           <label for="pravachanVideo">Bhajan:</label>
+           <input type="file" class="form-control-file" id="pravachanVideo" name="pravachanVideo" accept="video/*">
+           <input type="file" class="form-control-file" id="pravachan" name="pravachan" accept="audio/*">
+          </div>
+
+
+        <!-- <div class="form-group">
+          <label for="pravachan">Pravachan (Audio):</label>
+          <input type="file" class="form-control-file" id="pravachan" name="pravachan" accept="audio/*">
+        </div> -->
+
+        <div class="form-group">
+          <label for="pravachanVideo">Pravachan :</label>
+          <input type="file" class="form-control-file" id="pravachanVideo" name="pravachanVideo" accept="video/*">
+          </Audio><input type="file" class="form-control-file" id="pravachan" name="pravachan" accept="audio/*">
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="views">Views:</label>
+          <input type="number" class="form-control" id="views" name="views" required>
+        </div>
+
+        <!-- <div class="form-group">
+          <label for="viewCount">Count of Views:</label>
+          <input type="number" class="form-control" id="viewCount" name="viewCount" required>
+        </div> -->
+
+        <div class="form-group">
+          <label for="uploadDate">Uploading Date:</label>
+          <input type="date" class="form-control" id="uploadDate" name="uploadDate" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Register Content</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
