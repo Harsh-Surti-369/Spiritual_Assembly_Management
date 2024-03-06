@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Attendance</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/CenterLeader/takeAttendance.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Take Attendance</h2>
+        <form>
+            <div class="form-group">
+                <label>Devotees</label>
+                <div class="devotee-list" id="devoteeList">
+                    <!-- Devotees will be dynamically added here -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="sabhaSummary">Sabha Summary</label>
+                <textarea class="form-control" id="sabhaSummary" rows="3"
+                    placeholder="Write a summary of the sabha"></textarea>
+            </div>
+
+            <button type="submit" class="btn">Submit Attendance</button>
+        </form>
+    </div>
+    <script src="../js/CenterLeader/takeAttendance.js"></script>
+</body>
+
+</html>

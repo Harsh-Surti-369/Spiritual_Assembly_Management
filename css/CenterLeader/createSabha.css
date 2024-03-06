@@ -1,0 +1,19 @@
+body {
+    background-color: #f8f9fa;
+    background-image: url('../../images/bACK\ gROUND\ 02.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+}
+
+.registration-form {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: rgb(25, 25, 81);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #f8f9fa;
+
+}
