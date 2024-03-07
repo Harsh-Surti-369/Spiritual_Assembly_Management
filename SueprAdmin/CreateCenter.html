@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login to PWA</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/SueprAdmin/css/login.css">
+    <link rel="stylesheet" href="../css/SuperAdmin/login.css">
 </head>
 
 <body>
@@ -19,27 +19,30 @@
                                 style="width: 185px;" alt="logo" class="my-1 rounded-circle logo">
                             <h3 class="mt-1 mb-5 pb-1 brand">Prabodham Weekly Assembly</h3>
                         </div>
-                        <form id="centerLeaderLoginForm" onsubmit="return validateForm()">
+                        <form action="../php/createCenter.php" method="post" id="createCenter"
+                            onsubmit="return validateForm()">
                             <div class="form-group mb-4">
-                                <input type="name" id="name" class="form-control" placeholder="Center Name" required>
+                                <input name="name" type="name" id="name" class="form-control" placeholder="Center Name"
+                                    required>
                                 <label class="form-label" for="name">Center Name</label>
                                 <span id="name" class="text-danger"></span>
                             </div>
 
                             <div class="form-group mb-4">
-                                <input type="address" id="address" class="form-control" placeholder="address for center"
-                                    required>
+                                <input name="address" type="address" id="address" class="form-control"
+                                    placeholder="address for center" required>
                                 <label class="form-label" for="name">Address for Center</label>
                                 <span id="name" class="text-danger"></span>
                             </div>
                             <div class="form-group mb-4">
-                                <input type="email" id="email" class="form-control" placeholder="Email" required>
+                                <input name="email" type="email" id="email" class="form-control" placeholder="Email"
+                                    required>
                                 <label class="form-label" for="email">Email</label>
                                 <span id="emailError" class="text-danger"></span>
                             </div>
                             <div class="form-group mb-4">
-                                <input type="password" id="password" class="form-control" placeholder="Password"
-                                    required>
+                                <input name="password" type="password" id="leaderPassword" class="form-control"
+                                    placeholder="Password" required>
                                 <label class="form-label" for="password">Password</label>
                                 <br><span id="passwordError" class="text-danger"></span>
                             </div>
@@ -53,7 +56,7 @@
             </div>
         </div>
     </section>
-    <script src="../js/CenterLeader/CreateCenter.js"></script>
+    <!-- <script src="../js/SuperAdmin/CreateCenter.js"></script> -->
 </body>
 
 </html>

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperAdmin login</title>
+    <title>Login to PWA as Devotee</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/SuperAdmin/login.css">
+    <link rel="stylesheet" href="../css/CenterLeader/login.css">
 </head>
 
 <body>
@@ -16,18 +16,19 @@
                     <img src="https://yt3.googleusercontent.com/h-7oh6u7mXrnxy_9BKLdg2CA2pjIx_jADK5ocj6Y4-T60yFPoLlRNgH3bFK2Vu__GRysIMcnaEI=s176-c-k-c0x00ffffff-no-rj"
                         style="width: 185px;" alt="logo" class="my-1 rounded-circle logo">
                     <h2 class="text-center mb-4">Prabodham Weekly Assembly</h2>
-                    <h3 class="text-center mb-4">Super Admin</h3>
+                    <h3 class="text-center mb-4">Center Leader</h3>
                 </div>
-                <form id="emailForm" action="../php/SAlogin.php" method="post" onsubmit="return validateEmail()">
+                <form action="../php/CLlogin.php" method="post" id="superAdminLoginForm" onsubmit="return validateForm()">
                     <div class="form-group mb-4">
                         <input name="email" type="email" id="email" class="form-control" placeholder="Email" required>
                         <label class="form-label" for="email">Email</label>
-                        <span class="error-message" id="emailError"></span>
+                        <span id="emailError" class="text-danger"></span>
                     </div>
                     <div class="form-group mb-4">
                         <input name="password" type="password" id="password" class="form-control" placeholder="Password"
                             required>
                         <label class="form-label" for="password">Password</label>
+                        <br><span id="passwordError" class="text-danger"></span>
                     </div>
                     <div class="text-center pt-1 mb-5 pb-1">
                         <button class="btn btn-block fa-lg mb-3 gradient-custom-2 submit" type="submit">Log
@@ -37,8 +38,9 @@
             </div>
         </div>
     </section>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script> -->
-    <script src="../js/SuperAdmin/login.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/CenterLeader/login.js"></script>
 </body>
 
 </html>

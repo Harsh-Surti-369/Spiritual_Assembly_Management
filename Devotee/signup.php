@@ -12,40 +12,39 @@
 <body>
     <div class="container">
         <div class="form-container">
-            <img src="https://yt3.googleusercontent.com/h-7oh6u7mXrnxy_9BKLdg2CA2pjIx_jADK5ocj6Y4-T60yFPoLlRNgH3bFK2Vu__GRysIMcnaEI=s176-c-k-c0x00ffffff-no-rj"
-                alt="Logo" class="logo rounded-circle">
+            <img src="https://yt3.googleusercontent.com/h-7oh6u7mXrnxy_9BKLdg2CA2pjIx_jADK5ocj6Y4-T60yFPoLlRNgH3bFK2Vu__GRysIMcnaEI=s176-c-k-c0x00ffffff-no-rj" alt="Logo" class="logo rounded-circle">
             <h2 class="text-center mb-4">Prabodham Weekly Assembly</h2>
             <h3 class="text-center mb-4">Devotee Signup</h3>
-            <form id="signupForm" onsubmit="return validateForm()">
+            <form action="../php/Dsignup.php" method="post" id="signupForm" onsubmit="return validateForm()">
                 <div class="form-group row">
-                    <label for="name" class="col-sm-3 col-form-label">Name</label>
+                    <label for="name" class="col-sm-3 col-form-label">Name:</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
                         <span id="nameError" class="error"></span>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="email" class="col-sm-3 col-form-label">Email</label>
+                    <label for="email" class="col-sm-3 col-form-label">Email:</label>
                     <div class="col-sm-9">
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
                         <span id="emailError" class="error"></span>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="password" class="col-sm-3 col-form-label">Password</label>
+                    <label for="password" class="col-sm-3 col-form-label">Password:</label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
                         <span id="passwordError" class="error"></span>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="dob" class="col-sm-3 col-form-label">Date of Birth</label>
+                    <label for="dob" class="col-sm-3 col-form-label">Date of Birth:</label>
                     <div class="col-sm-9">
                         <input type="date" class="form-control" id="dob">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="gender" class="col-sm-3 col-form-label">Gender</label>
+                    <label for="gender" class="col-sm-3 col-form-label">Gender:</label>
                     <div class="col-sm-9">
                         <select class="form-control" id="gender">
                             <option selected disabled>Select</option>
@@ -56,18 +55,26 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="mobileNumber" class="col-sm-3 col-form-label">Mobile Number</label>
+                    <label for="mobileNumber" class="col-sm-3 col-form-label">Mobile Number:</label>
                     <div class="col-sm-9">
-                        <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter your mobile number">
+                        <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter your mobile number" required>
                         <span id="mobileNumberError" class="error"></span>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="spiritualCenter" class="col-sm-3 col-form-label">Nearest Spiritual Center</label>
+                    <label for="spiritualCenter" class="col-sm-3 col-form-label">Nearest Spiritual Center:</label>
                     <div class="col-sm-9">
-                        <select class="form-control" id="gender">
-
+                        <select class="form-control" id="spiritualCenter" required>
+                            <option selected disabled>Select</option>
+                            <?php
+                            // Fetch spiritual centers from the database and populate options
+                            // Example: $centers is an array containing center data
+                            foreach ($centers as $center) {
+                                echo "<option value='{$center['center_id']}'>{$center['center_name']}</option>";
+                            }
+                            ?>
                         </select>
+                        <span id="centerError" class="error"></span>
                     </div>
                 </div>
                 <button type="submit" class="btn submit btn-block">Sign Up</button>
