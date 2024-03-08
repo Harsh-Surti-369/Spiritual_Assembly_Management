@@ -27,10 +27,10 @@ function validateForm() {
     }
 
     // Validate password
-    if (!validatePassword(password)) {
-        document.getElementById("passwordError").textContent = "Invalid password format";
-        return false;
-    }
+    // if (!validatePassword(password)) {
+    //     document.getElementById("passwordError").textContent = "Invalid password format";
+    //     return false;
+    // }
 
     // Add additional form submission logic if needed
     // For now, let the form submit
@@ -39,7 +39,7 @@ function validateForm() {
 
 document.addEventListener("click", function (event) {
     const targetElement = event.target;
-    if (!(targetElement.matches("#email") || targetElement.matches("#password"))) {
+    if (!(targetElement.matches("#email"))) {
         validateForm();
     }
 });

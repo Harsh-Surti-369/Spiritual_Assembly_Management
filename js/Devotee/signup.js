@@ -25,12 +25,12 @@ function validateForm() {
         emailError.innerText = "";
     }
 
-    if (!isValidPassword(password)) {
-        passwordError.innerText = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit";
-        isValid = false;
-    } else {
-        passwordError.innerText = "";
-    }
+    // if (!isValidPassword(password)) {
+    //     passwordError.innerText = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit";
+    //     isValid = false;
+    // } else {
+    //     passwordError.innerText = "";
+    // }
 
     if (!isValidMobileNumber(mobileNumber)) {
         mobileNumberError.innerText = "Mobile number must be 10 digits long";
@@ -47,10 +47,10 @@ function isValidEmail(email) {
     return emailRegex.test(email);
 }
 
-function isValidPassword(password) {
-    var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
-    return passwordRegex.test(password);
-}
+// function isValidPassword(password) {
+//     var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+//     return passwordRegex.test(password);
+// }
 
 function isValidMobileNumber(mobileNumber) {
     var mobileNumberRegex = /^\d{10}$/;

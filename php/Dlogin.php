@@ -1,34 +1,34 @@
 <?php
+session_start();
+// Include the database connection file
+require('dbConnect.php');
 
-include('dbConnect.php');
-
-// Retrieve form data
 $email = $_POST['email'];
 $password = $_POST['password'];
 
-$sql = "SELECT password FROM tbl_devotee WHERE email = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$stmt->store_result();
+$sql = "SELECT * FROM tbl_devotee WHERE email = '$email'";
+$result = mysqli_query($conn, $sql);
 
-if ($stmt->num_rows == 1) {
-    $stmt->bind_result($hashedPassword);
-    $stmt->fetch();
-
-    if (password_verify($password, $hashedPassword)) {
-        // Password is correct
-        echo "Login successful";
-        // You can redirect the user to another page or perform other actions here
+if (mysqli_num_rows($result) == 1) {
+    // User found, verify password
+    $row = mysqli_fetch_assoc($result);
+    if (password_verify($password, $row['password'])) {
+        // Password is correct, set session variables and redirect
+        $_SESSION['devotee_id'] = $row['devotee_id'];
+        $_SESSION['email'] = $row['email'];
+        $_SESSION['login_success'] = "Login successful";
+        echo "Login success!!!";
     } else {
         // Password is incorrect
-        echo "Invalid email or password";
+        $_SESSION['login_error'] = "Invalid email or password";
+        header("Location: ../devotee/login.html");
+        exit();
     }
 } else {
-    // Email not found in the database
-    echo "Invalid email or password";
+    // User not found
+    $_SESSION['login_error'] = "Invalid email or password";
+    header("Location: ../devotee/login.html");
+    exit();
 }
 
-// Close statement and connection
-$stmt->close();
-$conn->close();
+mysqli_close($conn);

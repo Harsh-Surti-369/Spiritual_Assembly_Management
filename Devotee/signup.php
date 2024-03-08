@@ -19,34 +19,34 @@
                 <div class="form-group row">
                     <label for="name" class="col-sm-3 col-form-label">Name:</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
                         <span id="nameError" class="error"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="email" class="col-sm-3 col-form-label">Email:</label>
                     <div class="col-sm-9">
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
                         <span id="emailError" class="error"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="password" class="col-sm-3 col-form-label">Password:</label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
                         <span id="passwordError" class="error"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="dob" class="col-sm-3 col-form-label">Date of Birth:</label>
                     <div class="col-sm-9">
-                        <input type="date" class="form-control" id="dob">
+                        <input type="date" class="form-control" id="dob" name="dob">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="gender" class="col-sm-3 col-form-label">Gender:</label>
                     <div class="col-sm-9">
-                        <select class="form-control" id="gender">
+                        <select class="form-control" id="gender" name="gender" required>
                             <option selected disabled>Select</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
@@ -57,20 +57,28 @@
                 <div class="form-group row">
                     <label for="mobileNumber" class="col-sm-3 col-form-label">Mobile Number:</label>
                     <div class="col-sm-9">
-                        <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter your mobile number" required>
+                        <input type="tel" class="form-control" id="mobileNumber" name="mobileNumber" placeholder="Enter your mobile number" required>
                         <span id="mobileNumberError" class="error"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="spiritualCenter" class="col-sm-3 col-form-label">Nearest Spiritual Center:</label>
                     <div class="col-sm-9">
-                        <select class="form-control" id="spiritualCenter" required>
+                        <select class="form-control" id="spiritualCenter" name="spiritualCenter" required>
                             <option selected disabled>Select</option>
                             <?php
-                            // Fetch spiritual centers from the database and populate options
-                            // Example: $centers is an array containing center data
-                            foreach ($centers as $center) {
-                                echo "<option value='{$center['center_id']}'>{$center['center_name']}</option>";
+                            require('../php/dbConnect.php');
+
+                            $query = "SELECT center_id, center_name FROM tbl_center";
+                            $result = mysqli_query($conn, $query);
+
+                            if (mysqli_num_rows($result) > 0) {
+                                // Output data of each row
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo "<option value='{$row['center_id']}'>{$row['center_name']}</option>";
+                                }
+                            } else {
+                                echo "<option value='' disabled>No centers available</option>";
                             }
                             ?>
                         </select>
