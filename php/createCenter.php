@@ -68,8 +68,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $center_id = $conn->insert_id;
 
             // Prepare and execute SQL query to insert leader information
-            $sql_insert_leader = "INSERT INTO tbl_leader (name, email, password, address, center_id) 
-                                  VALUES ('$center_name', '$email', '$hashed_password', '$address', $center_id)";
+            $sql_insert_leader = "INSERT INTO tbl_leader (email, password, address, center_id) 
+                                  VALUES ('$email', '$hashed_password', '$address', $center_id)";
             if ($conn->query($sql_insert_leader) === TRUE) {
                 // Send email with login credentials
                 $to = $email;
