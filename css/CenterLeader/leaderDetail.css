@@ -1,11 +1,12 @@
 body {
-    background-image: url('/images/bACK\ gROUND\ 01.jpg');
+    background-image: url('../../images/bACK\ gROUND\ 02.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .form-container {
+    background-color: #EFECEC;
     background-size: cover;
     background-position: center;
     padding: 30px;

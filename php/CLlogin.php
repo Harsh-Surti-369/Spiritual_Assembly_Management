@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Password is correct, set session variable and redirect
             session_start();
             $_SESSION['leader_id'] = $row['leader_id'];
-            header("Location: profile.php"); // Redirect to center leader's profile page
+            header("Location: ../CenterLeader/leaderDetail.html"); // Redirect to center leader's profile page
             exit();
         } else {
             // Password is incorrect
