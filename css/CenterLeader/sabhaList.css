@@ -1,0 +1,33 @@
+     body {
+         background-color: #EFECEC;
+         color: #0C2D57;
+     }
+
+     .container {
+         background-color: #FFFFFF;
+         padding: 20px;
+         border-radius: 10px;
+         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+         margin-top: 20px;
+     }
+
+     .sabha-card {
+         background-color: #FFB0B0;
+         color: #0C2D57;
+         font-weight: bold;
+         margin-bottom: 20px;
+     }
+
+     .sabha-card-header {
+         background-color: #FC6736;
+         color: #FFFFFF;
+     }
+
+     .sabha-card-body {
+         padding: 20px;
+     }
+
+     .btn-take-attendance {
+         background-color: #0C2D57;
+         color: #FFFFFF;
+     }

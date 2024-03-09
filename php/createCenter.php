@@ -16,7 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                               VALUES ('$center_name', '$address', NOW())";
         if ($conn->query($sql_insert_center) === TRUE) {
             $center_id = $conn->insert_id;
-            $_SESSION['center_id'] = $center_id;
 
             $sql_insert_leader = "INSERT INTO tbl_leader (email, password, address, center_id) 
                                   VALUES ('$email', '$hashed_password', '$address', $center_id)";
