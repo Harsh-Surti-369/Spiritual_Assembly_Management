@@ -100,7 +100,7 @@
 
                                 if (!$attendance_taken) {
                                     // Attendance not taken, display link to take attendance
-                                    echo "<a href='takeAttendance.php?sabha_id=<?php echo $sabha_id; ?>' class='btn btn-take-attendance'>Take Attendance</a>";
+                                    echo "<a href='takeAttendance.php?sabha_id=" . $sabha_id . "' class='btn btn-take-attendance'>Take Attendance</a>";
                                 } else {
                                     // Attendance already taken, display message
                                     echo "<p class='text-success'>Attendance already taken</p>";
