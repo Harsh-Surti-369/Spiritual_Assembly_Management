@@ -17,7 +17,7 @@ if (mysqli_num_rows($result) == 1) {
         $_SESSION['devotee_id'] = $row['devotee_id'];
         $_SESSION['email'] = $row['email'];
         $_SESSION['login_success'] = "Login successful";
-        header("Location: ../devotee/home/page-1.index.html");
+        header("Location: ../devotee/home/index.html");
     } else {
         $_SESSION['login_error'] = "Invalid email or password";
         header("Location: ../devotee/login.html");

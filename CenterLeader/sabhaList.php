@@ -77,7 +77,7 @@
                     $location = $row['location'];
 
                     // Check if attendance is already taken for this sabha
-                    $sql_attendance = "SELECT * FROM tbl_attendance WHERE sabha_id = $sabha_id";
+                    $sql_attendance = "SELECT * FROM tbl_attendance WHERE sabha_id = '$sabha_id'";
                     $result_attendance = $conn->query($sql_attendance);
                     $attendance_taken = ($result_attendance && $result_attendance->num_rows > 0) ? true : false;
             ?>

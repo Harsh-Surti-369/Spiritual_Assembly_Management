@@ -22,14 +22,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($result_center_id->num_rows > 0) {
                 $row_center_id = $result_center_id->fetch_assoc();
                 $center_id = $row_center_id['center_id'];
-
-                // Start the session and store leader_id and center_id
-                session_start();
                 $_SESSION['leader_id'] = $leader_id;
                 $_SESSION['center_id'] = $center_id;
 
-                header("Location: ../CenterLeader/leaderDetail.html");
-                exit();
+                $sql_check_details = "SELECT name,address,DOB,m_no,gender FROM tbl_leader WHERE leader_id = '$leader_id'";
+                $result_check_details = $conn->query($sql_check_details);
+
+                if ($result_check_details->num_rows > 0) {
+                    // Details already inserted, redirect to another page
+                    header("Location: ../centerleader/managedevotees.php");
+                    exit();
+                } else {
+                    header("Location: ../CenterLeader/leaderDetail.html");
+                    exit();
+                }
             } else {
                 echo "Failed to fetch center ID.";
             }

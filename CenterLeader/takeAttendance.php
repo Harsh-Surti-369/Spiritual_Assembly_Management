@@ -25,9 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // If no attendance record exists, insert a new one
                     $sql_insert_attendance = "INSERT INTO tbl_attendance (sabha_id, devotee_id, attendance_status, description) VALUES ('$sabha_id', '$devotee_id', '$attendance_status', '$sabha_summary')";
                     if ($conn->query($sql_insert_attendance) === TRUE) {
-                        echo "Attendance for devotee ID $devotee_id inserted successfully.";
+                        echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                                </div>";
                     } else {
-                        echo "Error inserting attendance for devotee ID $devotee_id: " . $conn->error;
+                        echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                        <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                        </div>";
                     }
                 } else {
                     // If an attendance record already exists, update it
