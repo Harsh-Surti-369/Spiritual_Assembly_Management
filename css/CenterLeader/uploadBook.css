@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url("../../image/bgcanada.png");
+}
+
+.container {
+    max-width: 800px;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: inherit;
+}
+
+select:focus {
+    outline: none;
+    border-color: #756666;
+}
+
+.btn.btn-primary {
+    background-color: #0C2D57;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: block;
+    margin: 15px auto;
+    width: 100px;
+}
