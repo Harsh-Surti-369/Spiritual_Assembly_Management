@@ -105,7 +105,7 @@ $stmtPresentRecords->close();
           </li>
           <li class="u-nav-item"><a class="u-border-2 u-border-active-palette-1-light-2 u-border-no-left u-border-no-right u-border-no-top u-button-style u-nav-link u-radius u-text-active-white u-text-hover-custom-color-2" style="--radius:8px; padding: 6px 38px;">Bhajan</a>
           </li>
-          <li class="u-nav-item"><a class="u-border-2 u-border-active-palette-1-light-2 u-border-no-left u-border-no-right u-border-no-top u-button-style u-nav-link u-radius u-text-active-white u-text-hover-custom-color-2" style="--radius:8px; padding: 6px 38px;">Attendence</a>
+          <li class="u-nav-item"><a class="u-border-2 u-border-active-palette-1-light-2 u-border-no-left u-border-no-right u-border-no-top u-button-style u-nav-link u-radius u-text-active-white u-text-hover-custom-color-2" style="--radius:8px; padding: 6px 38px;" href="../devoteeAttendance.php">Attendence</a>
           </li>
         </ul>
       </div>
@@ -122,7 +122,7 @@ $stmtPresentRecords->close();
               </li>
               <li class="u-nav-item"><a class="u-button-style u-nav-link">Bhajan</a>
               </li>
-              <li class="u-nav-item"><a class="u-button-style u-nav-link">Attendence</a>
+              <li class="u-nav-item"><a class="u-button-style u-nav-link" href="../devoteeAttendance.php">Attendence</a>
               </li>
             </ul>
           </div>
@@ -131,6 +131,7 @@ $stmtPresentRecords->close();
       </div>
     </nav><img class="custom-expanded u-image u-image-default u-image-2" src="images/1000011660.png" alt="" data-image-width="3840" data-image-height="2160" data-animation-name="customAnimationIn" data-animation-duration="2250" data-animation-delay="0" data-animation-direction="">
   </header>
+
   <section class="u-carousel u-carousel-duration-500 u-carousel-right u-slide u-block-886e-1" id="carousel-4eaf" data-interval="5000" data-u-ride="carousel">
     <ol class="u-absolute-hcenter u-carousel-indicators u-block-886e-2">
       <li data-u-target="#carousel-4eaf" class="u-active u-grey-30" data-u-slide-to="0"></li>
@@ -181,6 +182,9 @@ $stmtPresentRecords->close();
                 <img src="svg/seva.svg" alt="" style="margin-top: 2rem;">
               </div>
               <h3 class="u-custom-font u-font-oswald u-text u-text-1">seva </h3>
+              <h6>
+                Aapdi seva nu 100% fad made, e rite seva thaay, enu naam "Samjanpurvak Seva".
+              </h6>
             </div>
           </div>
           <div class="u-align-center u-container-style u-list-item u-repeater-item u-shape-rectangle">
@@ -189,6 +193,9 @@ $stmtPresentRecords->close();
                 <img src="svg/smruti.svg" alt="" style="width: 10rem; height: 5rem; margin-top: 2rem;">
               </div>
               <h3 class="u-custom-font u-font-oswald u-text u-text-2">Smruti </h3>
+              <h6>
+                Swamiji ma nirantar dubine jeevvu, enu naam "Smruti".
+              </h6>
             </div>
           </div>
           <div class="u-align-center u-container-style u-list-item u-repeater-item u-shape-rectangle">
@@ -197,6 +204,9 @@ $stmtPresentRecords->close();
                 <img src="svg/suhradbhav.svg" alt="" style="margin-top: 2rem;">
               </div>
               <h3 class="u-custom-font u-font-oswald u-text u-text-3">Suhradbhav&nbsp;</h3>
+              <h6>
+                Dil thi sambandhno Mahima joi ane rasbas thavu, e "Suhradhbhav".
+              </h6>
             </div>
           </div>
           <div class="u-align-center u-container-style u-list-item u-repeater-item u-shape-rectangle">
@@ -205,6 +215,7 @@ $stmtPresentRecords->close();
                 <img src="svg/swadharm.svg" alt="" style="margin-top: 2rem;">
               </div>
               <h3 class="u-custom-font u-font-oswald u-text u-text-4">Swadharm </h3>
+              <h6>Vyakti, Padharth ane Prasang ma na bandhavaay, e "Aadhyatmik Swadharm".</h6>
             </div>
           </div>
         </div>
@@ -364,7 +375,6 @@ $stmtPresentRecords->close();
       </div>
     </div>
   </section>
-
 </body>
 
 </html>
