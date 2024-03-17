@@ -2,66 +2,88 @@
 session_start();
 include('../php/dbConnect.php');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get the selected period from the form
-    $period = $_POST['period'];
-    $devote_id = $_SESSION['devotee_id']; // Assuming devotee ID is stored in session
+// Get the selected period from the URL
+$period = isset($_GET['period']) ? $_GET['period'] : 'lifetime';
+$devotee_id = $_SESSION['devotee_id'];
 
-    // Define variables to store attendance data
-    $totalSabhas = 0;
-    $presentCount = 0;
+// Define variables to store attendance data
+$totalSabhas = 0;
+$presentCount = 0;
+$attendancePercentage = 0;
 
-    // Get the start date for the selected period
-    switch ($period) {
-        case 'last_month':
-            $startDate = date('Y-m-d', strtotime('first day of last month'));
-            break;
-        case 'last_year':
-            $startDate = date('Y-m-d', strtotime('first day of last year'));
-            break;
-        case 'lifetime':
-        default:
-            // Fetch the joining date of the devotee from the database
-            $joinDateQuery = "SELECT joining_date FROM tbl_devotee WHERE devotee_id = ?";
-            $joinDateStmt = $conn->prepare($joinDateQuery);
-            $joinDateStmt->bind_param("i", $devote_id);
-            $joinDateStmt->execute();
-            $joinDateResult = $joinDateStmt->get_result();
-            if ($joinDateRow = $joinDateResult->fetch_assoc()) {
-                $startDate = $joinDateRow['joining_date'];
-            } else {
-                // Default to empty string if joining date not found
-                $startDate = "";
-            }
-            break;
-    }
 
-    // Fetch attendance data from the database
-    $sql = "SELECT COUNT(*) AS total_sabhas, 
-                   SUM(CASE WHEN attendance_status = 'Present' THEN 1 ELSE 0 END) AS present_count
-            FROM tbl_attendance 
-            WHERE devotee_id = ? AND sabha_id IN (
-                SELECT sabha_id FROM tbl_sabha WHERE date >= ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("is", $devote_id, $startDate);
-    $stmt->execute();
+
+// Get the start and end dates for the selected period
+switch ($period) {
+    case 'last_month':
+        $currentDate = new DateTime();
+        $currentDate->modify('last month');
+        $lastMonthSameDate = $currentDate->format('Y-m-d');
+        $startDate = $lastMonthSameDate;
+        // $ = date('Y-m-d', strtotime('-1 month')); // 30 days before today's date
+        $endDate = date('Y-m-d'); // Today's date
+        break;
+    case 'last_year':
+        $startDate = date('Y-m-d', strtotime('-1 year')); // 365 days before today's date
+        $endDate = date('Y-m-d'); // Today's date
+        break;
+    default:
+        // Fetch the joining date of the devotee from the database
+        $joinDateQuery = "SELECT joining_date FROM tbl_devotee WHERE devotee_id = ?";
+        $joinDateStmt = $conn->prepare($joinDateQuery);
+        $joinDateStmt->bind_param("i", $devotee_id);
+        $joinDateStmt->execute();
+        $joinDateResult = $joinDateStmt->get_result();
+        if ($joinDateRow = $joinDateResult->fetch_assoc()) {
+            $startDate = $joinDateRow['joining_date'];
+            $endDate = date('Y-m-d'); // Today's date
+        } else {
+            // Default to empty string if joining date not found
+            $startDate = "";
+            $endDate = date('Y-m-d'); // Today's date
+        }
+        break;
+}
+
+$sql = "SELECT COUNT(*) AS total_sabhas, SUM(CASE WHEN attendance_status = 'Present' THEN 1 ELSE 0 END) AS present_count,
+            (SELECT COUNT(*) FROM tbl_sabha WHERE date BETWEEN ? AND ?) AS total_sabhas_in_period
+            FROM tbl_attendance
+            WHERE devotee_id = ?";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sss", $startDate, $endDate, $devotee_id);
+
+if ($stmt->execute()) {
     $result = $stmt->get_result();
-
     // Retrieve the attendance data
     if ($row = $result->fetch_assoc()) {
         $totalSabhas = $row['total_sabhas'];
         $presentCount = $row['present_count'];
+        $totalSabhasInPeriod = $row['total_sabhas_in_period'];
+        // print_r($row);
+        // Calculate the attendance percentage
+        if ($totalSabhasInPeriod > 0) {
+            $attendancePercentage = round(($presentCount / $totalSabhas) * 100, 2);
+        } else {
+            $attendancePercentage = 100; // Set 100% if no sabhas in the given period
+        }
     }
-
-    // Calculate the attendance percentage
-    $attendancePercentage = ($totalSabhas > 0) ? round(($presentCount / $totalSabhas) * 100, 2) : 0;
-
-    // Prepare chart data
-    $dataPoints = array(
-        array("label" => "Present", "y" => $attendancePercentage),
-        array("label" => "Absent", "y" => 100 - $attendancePercentage)
-    );
+} else {
+    // Log or display the error
+    error_log("Error executing SQL query: " . $stmt->error);
 }
+// Retrieve the attendance data
+if ($row = $result->fetch_assoc()) {
+    $totalSabhas = $row['total_sabhas'];
+    $presentCount = $row['present_count'];
+}
+
+
+// Prepare chart data
+$dataPoints = array(
+    array("label" => "Present", "y" => $attendancePercentage),
+    array("label" => "Absent", "y" => 100 - $attendancePercentage)
+);
 ?>
 
 <!DOCTYPE html>
@@ -75,8 +97,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <style>
         /* Custom CSS for styling */
         #attendanceComponent {
-            width: 30vw;
-            height: 30vw;
+            width: 60vw;
+            height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
@@ -108,13 +130,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div id="attendanceComponent">
         <h1>Devotee Attendance</h1>
         <div id="chartContainer"></div>
-        <form id="attendanceForm" action="devoteeAttendance.php" method="post">
+        <form id="attendanceForm" method="get">
             <div class="form-group">
                 <label for="timePeriod">Select Time Period:</label>
-                <select class="form-control" id="timePeriod" name="period" onchange="this.form.submit()">
-                    <option value="last_month">Last Month</option>
-                    <option value="last_year">Last Year</option>
-                    <option value="lifetime">Lifetime</option>
+                <select class="form-control" id="timePeriod" name="period" onchange="this.form.action = 'devoteeAttendance.php?period=' + this.value; this.form.submit();">
+                    <option value="last_month" <?php echo ($period == 'last_month') ? 'selected' : ''; ?>>Last Month</option>
+                    <option value="last_year" <?php echo ($period == 'last_year') ? 'selected' : ''; ?>>Last Year</option>
+                    <option value="lifetime" <?php echo ($period == 'lifetime') ? 'selected' : ''; ?>>Lifetime</option>
                 </select>
             </div>
         </form>
