@@ -44,10 +44,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Use prepared statements to prevent SQL injection
         $stmt = $conn->prepare("INSERT INTO tbl_content (file_path, title, description, speaker, upload_date, category, center_id)
-                               VALUES (?, ?, ?, ?, ?, ?, ?)");
+                               VALUES (?, ?, ?, ?, NOW(), ?, ?)");
 
         // Bind parameters to the prepared statement
-        $stmt->bind_param("ssssssi", $targetFilePath, $title, $description, $speaker, $date, $category, $center_id);
+        $stmt->bind_param("sssssi", $targetFilePath, $title, $description, $speaker, $category, $center_id);
 
         // Execute the prepared statement
         if ($stmt->execute()) {
@@ -151,17 +151,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="speakerInput" class="form-label">Speaker (Optional)</label>
                 <input class="form-control" type="text" id="speakerInput" name="speaker">
             </div>
-            <div class="mb-3">
-                <label for="dateInput" class="form-label">Date</label>
-                <input class="form-control" type="date" id="dateInput" name="date" required>
-            </div>
             <div class="form-group">
                 <label for="category">Category:</label>
                 <select id="category" name="category">
                     <option value="">Select Category</option>
                     <option value="bhajan">Bhajan</option>
                     <option value="pravachan">Pravachan</option>
-                    <option value="kirtan">Kirtan</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Upload</button>

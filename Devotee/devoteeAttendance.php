@@ -95,16 +95,28 @@ $dataPoints = array(
     <title>Attendance</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <style>
-        /* Custom CSS for styling */
+        body {
+            background: url('../images/bACK\ gROUND\ 02.jpg');
+        }
+
         #attendanceComponent {
-            width: 60vw;
+            width: 50vw;
             height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #f8f9fa;
             padding: 20px;
             border-right: 1px solid #dee2e6;
+        }
+
+        #sabhaDetailsComponent {
+            width: 50vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 20px;
+            overflow-y: auto;
         }
 
         #chartContainer {
@@ -123,6 +135,23 @@ $dataPoints = array(
         #chartContainer .canvasjs-chart-canvas {
             margin: 0 auto;
         }
+
+        .sabha-details {
+            background-color: #EFECEC;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+
+        .status {
+            color: #FC6736;
+            font-weight: bold;
+        }
+
+        .title {
+            color: #0C2D57;
+        }
     </style>
 </head>
 
@@ -140,6 +169,46 @@ $dataPoints = array(
                 </select>
             </div>
         </form>
+    </div>
+
+    <div id="sabhaDetailsComponent">
+        <h1>All sabhas</h1>
+        <?php
+        // Fetch sabha details and attendance status for the selected period
+        $sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, a.attendance_status, a.description
+                              FROM tbl_sabha s
+                              LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
+                              WHERE s.date BETWEEN ? AND ?
+                              ORDER BY s.date DESC";
+
+        $sabhaDetailsStmt = $conn->prepare($sabhaDetailsQuery);
+        $sabhaDetailsStmt->bind_param("iss", $devotee_id, $startDate, $endDate);
+        $sabhaDetailsStmt->execute();
+        $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
+
+        if ($sabhaDetailsResult->num_rows > 0) {
+            $totalSabhas = $sabhaDetailsResult->num_rows;
+            echo "<p><strong>Total Sabhas: $totalSabhas</strong></p>";
+
+            while ($row = $sabhaDetailsResult->fetch_assoc()) {
+                $sabhaTitle = $row['title'];
+                $sabhaDate = date('Y-m-d', strtotime($row['date']));
+                $sabhaSpeaker = $row['speaker'];
+                $attendanceStatus = $row['attendance_status'];
+                $description = $row['description'];
+
+                echo "<div class='sabha-details'>
+                        <h3 class='title'>$sabhaTitle</h3>
+                        <p><strong>Date:</strong> $sabhaDate</p>
+                        <p><strong>Speaker:</strong> $sabhaSpeaker</p>
+                        <p class='status'><strong>Attendance Status:</strong> $attendanceStatus</p>
+                        <p><strong>Description:</strong> $description</p>
+                      </div>";
+            }
+        } else {
+            echo "<p>No sabhas found for the selected period.</p>";
+        }
+        ?>
     </div>
 
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
