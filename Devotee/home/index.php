@@ -1,58 +1,3 @@
-<?php
-session_start();
-include('../../php/dbConnect.php');
-
-$devotee_id = $_SESSION['devotee_id'];
-
-$joinDateQuery = "SELECT joining_date FROM tbl_devotee WHERE devotee_id = ?";
-$joinDateStmt = $conn->prepare($joinDateQuery);
-$joinDateStmt->bind_param("i", $devotee_id);
-$joinDateStmt->execute();
-$joinDateResult = $joinDateStmt->get_result();
-
-if ($joinDateRow = $joinDateResult->fetch_assoc()) {
-  $startDate = $joinDateRow['joining_date'];
-  $endDate = date('Y-m-d'); // Today's date
-} else {
-  // Default to empty string if joining date not found
-  $startDate = "";
-  $endDate = date('Y-m-d'); // Today's date
-}
-
-// Fetch attendance data from the database for lifetime
-$sql = "SELECT COUNT(*) AS total_sabhas, 
-            SUM(CASE WHEN attendance_status = 'Present' THEN 1 ELSE 0 END) AS present_count
-        FROM tbl_attendance
-        WHERE devotee_id = ?";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $devotee_id);
-
-if ($stmt->execute()) {
-  $result = $stmt->get_result();
-
-  if ($row = $result->fetch_assoc()) {
-    $totalSabhas = $row['total_sabhas'];
-    $presentCount = $row['present_count'];
-
-    // Calculate the attendance percentage
-    if ($totalSabhas > 0) {
-      $attendancePercentage = round(($presentCount / $totalSabhas) * 100, 2);
-    } else {
-      $attendancePercentage = 0;
-    }
-  }
-} else {
-  // Log or display the error
-  error_log("Error executing SQL query: " . $stmt->error);
-}
-
-// Prepare chart data
-$dataPoints = array(
-  array("label" => "Present", "y" => $attendancePercentage),
-  array("label" => "Absent", "y" => 100 - $attendancePercentage)
-);
-?>
 <!DOCTYPE html>
 <html style="font-size: 16px;" lang="en">
 
@@ -68,7 +13,6 @@ $dataPoints = array(
   <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700|Playfair+Display:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Roboto+Slab:100,200,300,400,500,600,700,800,900|Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
 
   <style>
-    /* Custom CSS for styling */
     #chartContainer {
       width: 60%;
       margin: 50px auto;
@@ -106,8 +50,8 @@ $dataPoints = array(
               </a>
 
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="vpravachan.php">Video Pravachan</a>
-                <a class="dropdown-item" href="apravachan.php">Audio Pravachan</a>
+                <a class="dropdown-item" href="../vpravachan.php">Video Pravachan</a>
+                <a class="dropdown-item" href="../apravachan.php">Audio Pravachan</a>
               </div>
             </div>
           </li>
@@ -118,7 +62,7 @@ $dataPoints = array(
               </a>
 
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="vbhajan.php">Video Bhajan</a>
+                <a class="dropdown-item" href="../vbhajan.php">Video Bhajan</a>
                 <a class="dropdown-item" href="../abhajan.php">Audio Bhajan</a>
               </div>
             </div>
@@ -348,30 +292,6 @@ $dataPoints = array(
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var chart = new CanvasJS.Chart("chartContainer", {
-        animationEnabled: true,
-        exportEnabled: true,
-        title: {
-          text: "Lifetime Sabha Attendance Percentage"
-        },
-        subtitles: [{
-          text: "Pie Chart"
-        }],
-        data: [{
-          type: "pie",
-          showInLegend: true,
-          legendText: "{label}",
-          indexLabelFontSize: 16,
-          indexLabel: "{label} - #percent%",
-          yValueFormatString: "#0.#",
-          dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-        }]
-      });
-      chart.render();
-    });
-  </script>
 </body>
 
 </html>

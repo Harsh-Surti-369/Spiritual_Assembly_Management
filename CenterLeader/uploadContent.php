@@ -61,10 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         displayErrorMessage("Sorry, there was an error uploading your file.");
     }
-} else {
-    // Handle cases where the form is not submitted using POST method
-    // Not necessary as we're not processing GET requests for this form
-}
+} else {}
 
 ?>
 <!DOCTYPE html>
