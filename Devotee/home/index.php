@@ -208,31 +208,31 @@
           <div class="u-layout-row">
             <div class="u-container-align-left u-container-style u-layout-cell u-size-30 u-layout-cell-1">
               <div class="u-container-layout u-valign-middle u-container-layout-1">
-                <p class="u-align-left u-text u-text-default u-text-1"> We are a team of tourist specialists passionate
-                  about exceeding all expectations with all your travel needs. </p>
+                <p class="u-align-left u-text u-text-default u-text-1">Four things increase the relationship with God;
+                  - Guruhari P.P. Prabodh Swamiji
+                  (5-11-2022)</p>
                 <ul class="u-align-left u-custom-list u-spacing-10 u-text u-text-default u-text-2">
                   <li>
                     <div class="u-list-icon u-text-palette-1-light-1">
                       <div>●</div>
-                    </div> A lacus vestibulum sed arcu non
+                    </div>Service
                   </li>
                   <li>
                     <div class="u-list-icon u-text-palette-1-light-1">
                       <div>●</div>
-                    </div>Dolor magna eget est lorem ipsum&nbsp;
+                    </div>Bhajan
                   </li>
                   <li>
                     <div class="u-list-icon u-text-palette-1-light-1">
                       <div>●</div>
-                    </div>Dolor sit amet consectetur
+                    </div>Narrative
                   </li>
                   <li>
                     <div class="u-list-icon u-text-palette-1-light-1">
                       <div>●</div>
-                    </div>Mauris pellentesque pulvinar pellentesque
+                    </div> A look at the life of an elder
                   </li>
                 </ul>
-                <p class="u-align-left u-text u-text-default u-text-3">Image from <a href="https://freepik.com" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-light-1 u-btn-1">Freepik</a>
                 </p>
               </div>
             </div>
@@ -256,33 +256,44 @@
           <div class="u-container-align-center u-container-style u-list-item u-repeater-item">
             <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-align-center u-border-2 u-border-palette-1-base u-file-icon u-hover-feature u-icon u-icon-circle u-text-palette-1-base u-icon-1"><img src="images/29302-df30e304.png" alt=""></span>
               <h3 class="u-align-center u-text u-text-default u-text-1">Book's </h3>
-              <p class="u-align-center u-text u-text-2">Sample text. Click to select the text box. Click again or double
-                click to start editing the text.</p>
-              <a href="" class="u-active-none u-align-center u-border-2 u-border-hover-palette-2-base u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-light-1 u-btn u-button-style u-hover-none u-none u-text-body-color u-btn-1">learn
-                more</a>
+              <p class="u-align-center u-text u-text-2">Read spiritual Books</p>
+              <a href="books.php" class="btn btn-primary btn-gradient">
+                read
+              </a>
             </div>
           </div>
           <div class="u-container-align-center u-container-style u-list-item u-repeater-item">
             <div class="u-container-layout u-similar-container u-valign-top u-container-layout-2"><span class="u-align-center u-border-2 u-border-palette-1-base u-file-icon u-hover-feature u-icon u-icon-circle u-text-palette-1-base u-icon-2"><img src="images/109190-c72aaee0.png" alt=""></span>
               <h3 class="u-align-center u-text u-text-default u-text-3">Audio </h3>
-              <p class="u-align-center u-text u-text-4">Sample text. Click to select the text box. Click again or double
-                click to start editing the text.</p>
-              <a href="" class="u-active-none u-align-center u-border-2 u-border-hover-palette-2-base u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-light-1 u-btn u-button-style u-hover-none u-none u-text-body-color u-btn-2">learn
-                more</a>
+              <p class="u-align-center u-text u-text-4">Listen audio bhajans and pravachans</p>
+              <div class="btn-group">
+                <button class="btn btn-primary btn-gradient dropdown-toggle-split" type="button" data-toggle="dropdown" aria-expanded="false">
+                  listen
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="../abhajan.php">Bhajan</a>
+                  <a class="dropdown-item" href="../apravachan.php">Pravachan</a>
+                </div>
+              </div>
             </div>
           </div>
           <div class="u-container-align-center u-container-style u-list-item u-repeater-item">
             <div class="u-container-layout u-similar-container u-valign-top u-container-layout-3"><span class="u-align-center u-border-2 u-border-palette-1-base u-file-icon u-hover-feature u-icon u-icon-circle u-text-palette-1-base u-icon-3"><img src="images/2991195-5fbb1bcb.png" alt=""></span>
               <h3 class="u-align-center u-text u-text-default u-text-5">Video </h3>
-              <p class="u-align-center u-text u-text-6">Sample text. Click to select the text box. Click again or double
-                click to start editing the text.</p>
-              <a href="" class="u-active-none u-align-center u-border-2 u-border-hover-palette-2-base u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-light-1 u-btn u-button-style u-hover-none u-none u-text-body-color u-btn-3">learn
-                more</a>
+              <p class="u-align-center u-text u-text-6">Watch video and pravachan </p>
+              <div class="btn-group">
+                <button class="btn btn-primary btn-gradient dropdown-toggle-split" type="button" data-toggle="dropdown" aria-expanded="false">
+                  watch
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="../abhajan.php">Bhajan</a>
+                  <a class="dropdown-item" href="../apravachan.php">Pravachan</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
 
 
