@@ -13,6 +13,20 @@
   <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700|Playfair+Display:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Roboto+Slab:100,200,300,400,500,600,700,800,900|Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
 
   <style>
+    header {
+      background-color: transparent;
+      width: 100%;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-direction: row;
+    }
+
+    .hp {
+      height: 750px;
+    }
+
     #chartContainer {
       width: 60%;
       margin: 50px auto;
@@ -22,96 +36,23 @@
       text-align: center;
       margin-bottom: 30px;
     }
+
+    .u-logo {
+      margin-top: 20px;
+    }
+
+    .logo {
+      height: 100px;
+      width: 100px;
+      margin: 10px 20px;
+      border-radius: 20px;
+    }
   </style>
 </head>
 
 <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="false" class="u-body u-overlap u-overlap-transparent u-xl-mode" data-lang="en">
-  <header class="u-align-center-xs u-header u-sticky-6247 u-valign-bottom u-header" id="sec-990f" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">
-    <a href="https://nicepage.com" class="u-image u-logo u-image-1" data-image-width="512" data-image-height="201">
-      <img src="images/yds-canada-logo-white-bg.png" class="u-logo-image u-logo-image-1" data-image-width="80">
-    </a>
-    <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" data-responsive-from="MD">
-      <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px; font-weight: 700;">
-        <a class="u-button-style u-custom-active-border-color u-custom-border u-custom-border-color u-custom-borders u-custom-hover-border-color u-custom-left-right-menu-spacing u-custom-text-active-color u-custom-text-color u-custom-text-hover-color u-custom-top-bottom-menu-spacing u-nav-link" href="#">
-          <img src="svg/svg5.svg" alt="">
-          <img src="svg/svg6.svg" alt="">
-        </a>
-      </div>
-      <div class="u-custom-menu u-nav-container">
-        <ul class="u-custom-font u-font-lato u-nav u-spacing-30 u-unstyled u-nav-1">
-          <li class="u-nav-item"><a class="u-border-2 u-border-active-palette-1-light-2 u-border-no-left u-border-no-right u-border-no-top u-button-style u-nav-link u-radius u-text-active-white u-text-hover-custom-color-2" href="#" style="--radius:8px; padding: 6px 38px;">Home</a>
-          </li>
-          <li class="u-nav-item"><a class="u-border-2 u-border-active-palette-1-light-2 u-border-no-left u-border-no-right u-border-no-top u-button-style u-nav-link u-radius u-text-active-white u-text-hover-custom-color-2" style="--radius:8px; padding: 6px 38px;">Notification</a>
-          </li>
-          <li class="u-nav-item">
-            <div class="dropdown">
-              <a class=" dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false" style="color:black;">
-                Pravachan
-              </a>
-
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="../vpravachan.php">Video Pravachan</a>
-                <a class="dropdown-item" href="../apravachan.php">Audio Pravachan</a>
-              </div>
-            </div>
-          </li>
-          <li class="u-nav-item">
-            <div class="dropdown">
-              <a class=" dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false" style="color:black;">
-                Bhajan
-              </a>
-
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="../vbhajan.php">Video Bhajan</a>
-                <a class="dropdown-item" href="../abhajan.php">Audio Bhajan</a>
-              </div>
-            </div>
-          </li>
-          <li class="u-nav-item"><a class="u-border-2 u-border-active-palette-1-light-2 u-border-no-left u-border-no-right u-border-no-top u-button-style u-nav-link u-radius u-text-active-white u-text-hover-custom-color-2" style="--radius:8px; padding: 6px 38px;" href="../devoteeAttendance.php">Attendence</a>
-          </li>
-        </ul>
-      </div>
-      <div class="u-custom-menu u-nav-container-collapse">
-        <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
-          <div class="u-inner-container-layout u-sidenav-overflow">
-            <div class="u-menu-close"></div>
-            <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
-              <li class="u-nav-item"><a class="u-button-style u-nav-link" href="#">Home</a>
-              </li>
-              <li class="u-nav-item"><a class="u-button-style u-nav-link">Notification</a>
-              </li>
-              <li class="u-nav-item">
-                <div class="dropdown">
-                  <a class=" dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false" style="color:white; ">
-                    Pravachan
-                  </a>
-
-                  <div class="dropdown-menu">
-                    <a class="dropdown-item" href="vpravachan.php">Video Pravachan</a>
-                    <a class="dropdown-item" href="apravachan.php">Audio Pravachan</a>
-                  </div>
-                </div>
-              </li>
-              <div class="dropdown">
-                <a class=" dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false" style="color:white; ">
-                  Bhajan
-                </a>
-
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" href="vbhajan.php">Video Bhajan</a>
-                  <a class="dropdown-item" href="../abhajan.php">Audio Bhajan</a>
-                </div>
-              </div>
-              </li>
-              <li class="u-nav-item"><a class="u-button-style u-nav-link" href="../devoteeAttendance.php">Attendence</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
-      </div>
-    </nav><img class="custom-expanded u-image u-image-default u-image-2" src="images/1000011660.png" alt="" data-image-width="3840" data-image-height="2160" data-animation-name="customAnimationIn" data-animation-duration="2250" data-animation-delay="0" data-animation-direction="">
-  </header>
+  <?php include('../header.php');
+  ?>
 
   <section class="u-carousel u-carousel-duration-500 u-carousel-right u-slide u-block-886e-1" id="carousel-4eaf" data-interval="5000" data-u-ride="carousel">
     <ol class="u-absolute-hcenter u-carousel-indicators u-block-886e-2">
@@ -129,6 +70,7 @@
             <svg class="u-svg-content" viewBox="0 0 160 80" x="0px" y="0px" id="svg-2307">
               <path d="M80,0C35.8,0,0,35.8,0,80h160C160,35.8,124.2,0,80,0z"></path>
             </svg>
+            <img class="hp custom-expanded u-image u-image-default u-image-2" src="images/1000011660.png" alt="" data-image-width="3840" data-image-height="2160" data-animation-name="customAnimationIn" data-animation-duration="2250" data-animation-delay="0" data-animation-direction="">
           </div>
         </div>
       </div>

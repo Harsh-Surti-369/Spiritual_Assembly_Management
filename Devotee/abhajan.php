@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('../php/dbConnect.php');
+
 $devotee_id = $_SESSION['devotee_id'];
 $category = "bhajan";
 $allowed_extensions = array("mp3", "wav", "ogg");
@@ -43,7 +44,6 @@ if ($row_center = $result_center->fetch_assoc()) {
         $query .= " AND " . implode(" AND ", $filters);
     }
 
-
     if (!empty($orderBy)) {
         $query .= " " . $orderBy;
     }
@@ -56,8 +56,22 @@ if ($row_center = $result_center->fetch_assoc()) {
     $stmt->execute();
     $result = $stmt->get_result();
 }
+
+function addToFavorites($content_id, $devotee_id, $conn)
+{
+    $query = "INSERT INTO tbl_favourites (content_id, devotee_id) VALUES (?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ii", $content_id, $devotee_id);
+    $stmt->execute();
+}
+
+// Check if content is being added to favorites
+if (isset($_POST['add_to_favorites'])) {
+    $content_id = $_POST['content_id'];
+    addToFavorites($content_id, $devotee_id, $conn);
+}
 ?>
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -65,16 +79,10 @@ if ($row_center = $result_center->fetch_assoc()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bhajan List</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous" defer></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-image: url('../images/bgCanada.png');
-        }
-
-        span {
-            color: #666;
         }
 
         .container {
@@ -83,7 +91,7 @@ if ($row_center = $result_center->fetch_assoc()) {
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff;
+            background-color: #FFFFFF;
         }
 
         h1 {
@@ -120,23 +128,58 @@ if ($row_center = $result_center->fetch_assoc()) {
             line-height: 1.5;
         }
 
-        audio {
-            width: 100%;
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
         }
 
-        .download-link {
-            color: #0C2D57;
-            font-weight: bold;
-            text-decoration: none;
+        .audio-control-btn {
+            margin: 0 10px;
+            background-color: #FC6736;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
         }
 
-        .download-link:hover {
-            color: #007bff;
-            text-decoration: underline;
+        .play {
+            margin: 0 10px;
+            background-color: #0C2D57;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .audio-control-btn:hover {
+            background-color: #FFB0B0;
+        }
+
+        .progress-bar-container {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .progress-bar {
+            height: 10px
+        }
+
+        .download-btn {
+            margin: 0 10px;
+            background-color: #0C2D57;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            background-color: #FFB0B0;
         }
     </style>
 </head>
@@ -144,351 +187,126 @@ if ($row_center = $result_center->fetch_assoc()) {
 <body>
     <div class="container mt-3">
         <h1>Bhajan List</h1>
-        <form method="GET" action="">
-
-            <select name="date" id="date-filter">
-                <option value="">All Dates</option>
-                <option value="asc">Oldest First</option>
-                <option value="desc">Newest First</option>
-            </select>
-
-            <input type="text" name="singer" id="singer-filter" placeholder="Search by Singer">
-            <button type="submit">Apply Filters</button>
-        </form>
-
-        <?php
-
-        while ($row = $result->fetch_assoc()) {
-            $title = $row['title'];
-            $description = $row['description'];
-            $file_path = $row['file_path'];
-
-            $file_extension = pathinfo($file_path, PATHINFO_EXTENSION);
-
-            if (in_array(strtolower($file_extension), $allowed_extensions)) {
-        ?>
-
+        <div id="bhajan-list">
+            <?php
+            while ($row = $result->fetch_assoc()) {
+                $title = $row['title'];
+                $description = $row['description'];
+                $file_path = $row['file_path'];
+            ?>
                 <div class='bhajan mb-3'>
-                    <h3 class='bhajan-title'><? $title ?></h3>
-                    <p class='bhajan-description'><? $description ?></p>
-                    <audio controls class='bhajan-audio'>
-                        <source src='<? $file_path ?>' type='audio/$file_extension'>
+                    <h3 class='bhajan-title'><?php echo $title; ?></h3>
+                    <p class='bhajan-description'><?php echo $description; ?></p>
+                    <audio class='bhajan-audio'>
+                        <source src='<?php echo $file_path; ?>' type='audio/mpeg'>
                         Your browser does not support the audio element.
                     </audio>
+                    <button class='download-btn' onclick="downloadAudio('<?php echo $file_path; ?>')">Download</button>
+                    <button class="add-to-favourites-btn" onclick="addToFavourites(<?php echo $content_id; ?>)">Add to Favourites</button>
                 </div>
-        <?php
-            }
-        }
-        ?>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</body>
-
-</html> -->
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Music Player</title>
-    <style>
-        /* Basic styling */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-            background-image: url("/Spiritual_Assembly_Management/images/bACK\ gROUND\ 01.jpg");
-        }
-
-        #player {
-            max-width: 400px;
-            margin: 50px auto;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-        }
-
-        /* Audio player */
-        #audio {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        /* Playlist */
-        #playlist {
-            list-style-type: none;
-            padding: 0;
-            text-align: left;
-        }
-
-        #playlist li {
-            cursor: pointer;
-            padding: 10px;
-            margin: 5px 0;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #playlist li:hover {
-            background-color: #e0e0e0;
-        }
-
-        /* Play button */
-        #playPauseBtn {
-            font-size: 1.2em;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #playPauseBtn:hover {
-            background-color: #45a049;
-        }
-
-        /* Volume control */
-        #volumeControl {
-            width: 100%;
-        }
-
-        /* Progress bar */
-        #progressBar {
-            width: 100%;
-        }
-
-        /* Playlist section */
-        #playlistSection {
-            margin-top: 20px;
-        }
-
-        #playlistSection h2 {
-            margin-bottom: 10px;
-        }
-
-        .playlistItem {
-            margin-bottom: 5px;
-        }
-
-        .playlistBtn {
-            padding: 5px 10px;
-            background-color: #008CBA;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        .playlistBtn:hover {
-            background-color: #005A79;
-        }
-
-        /* Add to playlist button */
-        .addToPlaylistBtn {
-            padding: 5px 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .addToPlaylistBtn:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
-
-<body>
-    <div id="player">
-        <!-- Audio player -->
-        <audio id="audio" controls autoplay></audio>
-
-        <!-- Song information -->
-        <div id="songInfo">
-            <h2>Title</h2>
-            <p id="artist">Artist</p>
-            <p id="album">Album</p>
-            <p id="time">0:00 / 0:00</p>
-            <img id="coverArt" src="" alt="Cover Art">
+            <?php } ?>
         </div>
-
-        <!-- Playlist -->
-        <ul id="playlist">
-            <!-- Songs will be added dynamically -->
-        </ul>
-
-        <!-- Play/Pause button -->
-        <button id="playPauseBtn">Play/Pause</button>
-
-        <!-- Volume control -->
-        <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
-        <span>Volume:</span>
-
-        <!-- Progress bar -->
-        <input type="range" id="progressBar" min="0" max="100" value="0">
-        <span>Timeline:</span><br>
-
-        <!-- Download button -->
-        <button id="downloadBtn">Download</button>
-
-        <!-- Share button -->
-        <button id="shareBtn">Share</button>
-
-        <!-- Play next button -->
-        <button id="playNextBtn">Play Next</button>
-
-        <!-- Add to playlist button -->
-        <button id="addToPlaylistBtn">Add to Playlist</button>
-
-        <!-- Logo -->
-        <img src="logo.jpg" alt="Logo">
+        <div class="audio-controls">
+            <button id="prev-btn" class="audio-control-btn">&#10094; Previous</button>
+            <button id="play-pause-btn" class="audio-control-btn play">► Play</button>
+            <button id="next-btn" class="audio-control-btn">Next &#10095;</button>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+        </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Get references to elements
-        const audio = document.getElementById('audio');
-        const playlist = document.getElementById('playlist');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const volumeControl = document.getElementById('volumeControl');
-        const progressBar = document.getElementById('progressBar');
-        const songInfo = document.getElementById('songInfo');
-        const titleElement = document.querySelector('#songInfo h2');
-        const artistElement = document.getElementById('artist');
-        const albumElement = document.getElementById('album');
-        const coverArtElement = document.getElementById('coverArt');
-        const timeElement = document.getElementById('time');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const shareBtn = document.getElementById('shareBtn');
-        const playNextBtn = document.getElementById('playNextBtn');
-        const addToPlaylistBtn = document.getElementById('addToPlaylistBtn');
+        $(document).ready(function() {
+            var audioElements = $('audio.bhajan-audio');
 
-        // Song data
-        const songs = [{
-                title: 'Song 1',
-                artist: 'Artist 1',
-                album: 'Album 1',
-                coverArt: 'cover1.jpg',
-                url: 'song1.mp3'
-            },
-            {
-                title: 'Song 2',
-                artist: 'Artist 2',
-                album: 'Album 2',
-                coverArt: 'cover2.jpg',
-                url: 'song2.mp3'
-            }
-            // Add more songs as needed
-        ];
+            // Play/pause button click event
+            $('#play-pause-btn').click(function() {
+                var currentAudio = audioElements.filter(function() {
+                    return !this.paused;
+                })[0];
 
-        let currentSongIndex = 0;
+                if (!currentAudio) {
+                    currentAudio = audioElements.eq(0)[0];
+                }
 
-        // Load initial song
-        loadSong(songs[currentSongIndex]);
+                if (currentAudio.paused) {
+                    currentAudio.play();
+                    $(this).text('|| Pause');
+                } else {
+                    currentAudio.pause();
+                    $(this).text('► Play');
+                }
+            });
 
-        // Play/pause button functionality
-        playPauseBtn.addEventListener('click', function() {
-            if (audio.paused) {
-                audio.play();
-            } else {
-                audio.pause();
-            }
+            // Previous button click event
+            $('#prev-btn').click(function() {
+                var currentAudio = audioElements.filter(function() {
+                    return !this.paused;
+                })[0];
+
+                var currentIndex = audioElements.index(currentAudio);
+                var prevIndex = currentIndex - 1;
+                if (prevIndex < 0) {
+                    prevIndex = audioElements.length - 1;
+                }
+
+                var prevAudio = audioElements.eq(prevIndex);
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                prevAudio.trigger('play');
+            });
+
+            // Next button click event
+            $('#next-btn').click(function() {
+                var currentAudio = audioElements.filter(function() {
+                    return !this.paused;
+                })[0];
+
+                var currentIndex = audioElements.index(currentAudio);
+                var nextIndex = currentIndex + 1;
+                if (nextIndex >= audioElements.length) {
+                    nextIndex = 0;
+                }
+
+                var nextAudio = audioElements.eq(nextIndex);
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                nextAudio.trigger('play');
+            });
+
+            // Update progress bar as audio is played
+            audioElements.on('timeupdate', function() {
+                var audio = $(this)[0];
+                var progress = (audio.currentTime / audio.duration) * 100;
+                $('.progress-bar').css('width', progress + '%');
+            });
+
+            // Change audio playback position when progress bar is clicked
+            $('.progress-bar-container').on('click', function(e) {
+                var audio = audioElements.filter(function() {
+                    return !this.paused;
+                })[0];
+
+                var offset = $(this).offset();
+                var xPos = e.pageX - offset.left;
+                var progress = (xPos / $(this).width()) * 100;
+                var seekTime = (audio.duration * (progress / 100));
+                audio.currentTime = seekTime;
+            });
         });
 
-        // Volume control functionality
-        volumeControl.addEventListener('input', function() {
-            audio.volume = this.value;
-        });
-
-        // Progress bar functionality
-        audio.addEventListener('timeupdate', function() {
-            progressBar.value = (audio.currentTime / audio.duration) * 100;
-            updateTime();
-        });
-
-        progressBar.addEventListener('input', function() {
-            audio.currentTime = (this.value / 100) * audio.duration;
-            updateTime();
-        });
-        const currentMinutes = Math.floor(audio.currentTime / 60);
-        const currentSeconds = Math.floor(audio.currentTime % 60);
-        // Update time display
-        // function updateTime() {
-
-        //     const durationMinutes = Math.floor(audio.duration / 60);
-        //     const durationSeconds = Math.floor(audio.duration % 60);
-        //     const currentTimeString = $ {
-        //         currentMinutes
-        //     }: $ {
-        //         currentSeconds < 10 ? '0' : ''
-        //     }
-        //     $ {
-        //         currentSeconds
-        //     };
-        //     const durationTimeString = $ {
-        //         durationMinutes
-        //     }: $ {
-        //         durationSeconds < 10 ? '0' : ''
-        //     }
-        //     $ {
-        //         durationSeconds
-        //     };
-        //     timeElement.textContent = $ {
-        //         currentTimeString
-        //     }
-        //     / ${durationTimeString};
-        // }
-
-        // Function to load a song
-        function loadSong(song) {
-            titleElement.textContent = song.title;
-            artistElement.textContent = song.artist;
-            albumElement.textContent = song.album;
-            coverArtElement.src = song.coverArt;
-            audio.src = song.url;
-            audio.play();
+        function downloadAudio(audioUrl) {
+            var a = document.createElement('a');
+            a.href = audioUrl;
+            a.download = audioUrl.split('/').pop();
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
-
-        // Function to play next song
-        function playNextSong() {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
-            loadSong(songs[currentSongIndex]);
-        }
-
-        // Download button functionality
-        downloadBtn.addEventListener('click', function() {
-            // Implement download functionality here
-            // Example: window.location.href = audio.src;
-            console.log('Downloading...');
-        });
-
-        // Share button functionality
-        shareBtn.addEventListener('click', function() {
-            // Implement share functionality here
-            console.log('Sharing...');
-        });
-
-        // Play next button functionality
-        playNextBtn.addEventListener('click', function() {
-            playNextSong();
-        });
-
-        // Add to playlist button functionality
-        addToPlaylistBtn.addEventListener('click', function() {
-            // Implement add to playlist functionality here
-            console.log('Adding to playlist...');
-        });
     </script>
+
 </body>
 
 </html>
