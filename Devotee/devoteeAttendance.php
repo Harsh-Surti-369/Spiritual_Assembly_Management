@@ -172,17 +172,18 @@ $dataPoints = array(
     </div>
 
     <div id="sabhaDetailsComponent">
+        <!-- Right component with sabha details -->
         <h1>All sabhas</h1>
         <?php
         // Fetch sabha details and attendance status for the selected period
-        $sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, a.attendance_status, a.description
-                              FROM tbl_sabha s
-                              LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
-                              WHERE s.date BETWEEN ? AND ?
-                              ORDER BY s.date DESC";
+        $sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, COALESCE(a.attendance_status, 'Absent') AS attendance_status, a.description
+                      FROM tbl_sabha s
+                      LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
+                      WHERE s.center_id = ? AND s.date BETWEEN ? AND ?
+                      ORDER BY s.date DESC";
 
         $sabhaDetailsStmt = $conn->prepare($sabhaDetailsQuery);
-        $sabhaDetailsStmt->bind_param("iss", $devotee_id, $startDate, $endDate);
+        $sabhaDetailsStmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $startDate, $endDate);
         $sabhaDetailsStmt->execute();
         $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
 
@@ -198,17 +199,18 @@ $dataPoints = array(
                 $description = $row['description'];
 
                 echo "<div class='sabha-details'>
-                        <h3 class='title'>$sabhaTitle</h3>
-                        <p><strong>Date:</strong> $sabhaDate</p>
-                        <p><strong>Speaker:</strong> $sabhaSpeaker</p>
-                        <p class='status'><strong>Attendance Status:</strong> $attendanceStatus</p>
-                        <p><strong>Description:</strong> $description</p>
-                      </div>";
+                <h3 class='title'>$sabhaTitle</h3>
+                <p><strong>Date:</strong> $sabhaDate</p>
+                <p><strong>Speaker:</strong> $sabhaSpeaker</p>
+                <p class='status'><strong>Attendance Status:</strong> $attendanceStatus</p>
+                <p><strong>Description:</strong> $description</p>
+              </div>";
             }
         } else {
             echo "<p>No sabhas found for the selected period.</p>";
         }
         ?>
+
     </div>
 
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

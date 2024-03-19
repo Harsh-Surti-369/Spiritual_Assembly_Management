@@ -33,10 +33,11 @@ if ($row_center = $result_center->fetch_assoc()) {
     }
 
     if (isset($_GET['singer']) && !empty($_GET['singer'])) {
-        $singer = $_GET['singer'];
-        $filters[] = "speaker = ?";
-        $bind_types .= "s";
-        $bind_values[] = $singer;
+        $search = '%' . $_GET['search'] . '%'; // Wrap search term in wildcard characters
+        $filters[] = "(title LIKE ? OR speaker LIKE ?)"; // Condition to search by title or speaker
+        $bind_types .= "ss"; // Add two 's' for two string parameters
+        $bind_values[] = $search; // Bind search term for title
+        $bind_values[] = $search;
     }
 
     if (!empty($filters)) {
@@ -175,6 +176,21 @@ if ($row_center = $result_center->fetch_assoc()) {
 <body>
     <div class="container mt-3">
         <h1>Pravachan List</h1>
+        <form method="GET" action="" class="form-inline mb-3">
+            <div class="form-group mr-2">
+                <label for="date-filter" class="mr-1">Date:</label>
+                <select class="form-control" id="date-filter" name="date">
+                    <option value="">All Dates</option>
+                    <option value="asc">Oldest First</option>
+                    <option value="desc">Newest First</option>
+                </select>
+            </div>
+            <div class="form-group mr-2">
+                <input type="text" class="form-control" id="singer-filter" name="singer" placeholder="Search by Speaker or title">
+            </div>
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+        </form>
+
         <div id="bhajan-list">
             <?php
             while ($row = $result->fetch_assoc()) {
@@ -193,14 +209,15 @@ if ($row_center = $result_center->fetch_assoc()) {
                 </div>
             <?php } ?>
         </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+        </div>
         <div class="audio-controls">
             <button id="prev-btn" class="audio-control-btn">&#10094; Previous</button>
             <button id="play-pause-btn" class="audio-control-btn play">► Play</button>
             <button id="next-btn" class="audio-control-btn">Next &#10095;</button>
         </div>
-        <div class="progress-bar-container">
-            <div class="progress-bar"></div>
-        </div>
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

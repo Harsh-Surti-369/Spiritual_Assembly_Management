@@ -14,7 +14,7 @@
             <ul class="u-custom-font u-font-lato u-nav u-spacing-30 u-unstyled u-nav-1">
                 <li class="u-nav-item"><a class="u-border-2 u-border-active-palette-1-light-2 u-border-no-left u-border-no-right u-border-no-top u-button-style u-nav-link u-radius u-text-active-white u-text-hover-custom-color-2" href="#" style="--radius:8px; padding: 6px 38px;">Home</a>
                 </li>
-                <li class="u-nav-item"><a class="u-border-2 u-border-active-palette-1-light-2 u-border-no-left u-border-no-right u-border-no-top u-button-style u-nav-link u-radius u-text-active-white u-text-hover-custom-color-2" style="--radius:8px; padding: 6px 38px;">Notification</a>
+                <li class="u-nav-item"><a class="u-border-2 u-border-active-palette-1-light-2 u-border-no-left u-border-no-right u-border-no-top u-button-style u-nav-link u-radius u-text-active-white u-text-hover-custom-color-2" style="--radius:8px; padding: 6px 38px;" href="../books.php">Books</a>
                 </li>
                 <li class="u-nav-item">
                     <div class="dropdown">
@@ -49,9 +49,9 @@
                 <div class="u-inner-container-layout u-sidenav-overflow">
                     <div class="u-menu-close"></div>
                     <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
-                        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="#">Home</a>
+                        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="home/index.php">Home</a>
                         </li>
-                        <li class="u-nav-item"><a class="u-button-style u-nav-link">Notification</a>
+                        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="../books.php">Books</a>
                         </li>
                         <li class="u-nav-item">
                             <div class="dropdown">

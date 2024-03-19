@@ -34,10 +34,11 @@ if ($row_center = $result_center->fetch_assoc()) {
     }
 
     if (isset($_GET['singer']) && !empty($_GET['singer'])) {
-        $singer = $_GET['singer'];
-        $filters[] = "speaker = ?";
-        $bind_types .= "s";
-        $bind_values[] = $singer;
+        $search = '%' . $_GET['search'] . '%'; // Wrap search term in wildcard characters
+        $filters[] = "(title LIKE ? OR speaker LIKE ?)"; // Condition to search by title or speaker
+        $bind_types .= "ss"; // Add two 's' for two string parameters
+        $bind_values[] = $search; // Bind search term for title
+        $bind_values[] = $search;
     }
 
     if (!empty($filters)) {
@@ -57,18 +58,18 @@ if ($row_center = $result_center->fetch_assoc()) {
     $result = $stmt->get_result();
 }
 
-function addToFavorites($content_id, $devotee_id, $conn)
+function addToFavorites($id, $devotee_id, $conn)
 {
-    $query = "INSERT INTO tbl_favourites (content_id, devotee_id) VALUES (?, ?)";
+    $query = "INSERT INTO favorites (id, devotee_id) VALUES (?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ii", $content_id, $devotee_id);
+    $stmt->bind_param("ii", $id, $devotee_id);
     $stmt->execute();
 }
 
 // Check if content is being added to favorites
 if (isset($_POST['add_to_favorites'])) {
-    $content_id = $_POST['content_id'];
-    addToFavorites($content_id, $devotee_id, $conn);
+    $id = $_POST['id'];
+    addToFavorites($id, $devotee_id, $conn);
 }
 ?>
 <!DOCTYPE html>
@@ -187,9 +188,24 @@ if (isset($_POST['add_to_favorites'])) {
 <body>
     <div class="container mt-3">
         <h1>Bhajan List</h1>
+        <form method="GET" action="" class="form-inline mb-3">
+            <div class="form-group mr-2">
+                <label for="date-filter" class="mr-1">Date:</label>
+                <select class="form-control" id="date-filter" name="date">
+                    <option value="">All Dates</option>
+                    <option value="asc">Oldest First</option>
+                    <option value="desc">Newest First</option>
+                </select>
+            </div>
+            <div class="form-group mr-2">
+                <input type="text" class="form-control" id="search-filter" name="search" placeholder="Search by Title or Singer">
+            </div>
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+        </form>
         <div id="bhajan-list">
             <?php
             while ($row = $result->fetch_assoc()) {
+                $id = $row['id'];
                 $title = $row['title'];
                 $description = $row['description'];
                 $file_path = $row['file_path'];
@@ -201,21 +217,29 @@ if (isset($_POST['add_to_favorites'])) {
                         <source src='<?php echo $file_path; ?>' type='audio/mpeg'>
                         Your browser does not support the audio element.
                     </audio>
-                    <button class='download-btn' onclick="downloadAudio('<?php echo $file_path; ?>')">Download</button>
-                    <button class="add-to-favourites-btn" onclick="addToFavourites(<?php echo $content_id; ?>)">Add to Favourites</button>
+                    <button class='download-btn btn-sm' onclick="downloadAudio('<?php echo $file_path; ?>')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                        </svg></button>
+                    <button class="btn btn-success add-to-favourites-btn" id="favourite" onclick="addToFavourites(<?php echo ($id) ?> )">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16">
+                            <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z" />
+                            <path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1" />
+                        </svg>
+                    </button>
                 </div>
             <?php } ?>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
         </div>
         <div class="audio-controls">
             <button id="prev-btn" class="audio-control-btn">&#10094; Previous</button>
             <button id="play-pause-btn" class="audio-control-btn play">► Play</button>
             <button id="next-btn" class="audio-control-btn">Next &#10095;</button>
         </div>
-        <div class="progress-bar-container">
-            <div class="progress-bar"></div>
-        </div>
-    </div>
 
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -295,7 +319,29 @@ if (isset($_POST['add_to_favorites'])) {
                 var seekTime = (audio.duration * (progress / 100));
                 audio.currentTime = seekTime;
             });
+
+
+
+
         });
+
+        function addToFavourites(id) {
+            console.log('Content ID:', id); // Check if the ID is correctly passed
+            $.ajax({
+                url: 'addToFavourites.php',
+                method: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    console.log('Response:', response); // Check the response from the server
+                    alert(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
 
         function downloadAudio(audioUrl) {
             var a = document.createElement('a');
