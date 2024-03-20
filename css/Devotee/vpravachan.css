@@ -1,0 +1,132 @@
+    body,
+    h1,
+    h2,
+    p,
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Set default font family and size */
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+    }
+
+    /* Header styles */
+    header {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    /* Main content container */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Search bar styles */
+    .search-bar {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .search-input {
+        width: 60%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .search-button {
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+
+
+
+
+    #video-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+
+    .video {
+        width: 300px;
+        margin: 10px;
+        padding: 10px;
+        background-color: #fff;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+
+    .video img {
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    .video h2 {
+        margin-top: 10px;
+        font-size: 18px;
+    }
+
+    .video p {
+        margin-top: 5px;
+        font-size: 14px;
+    }
+
+    /* Video player styling */
+    #video-player {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    #video {
+        width: 600px;
+    }
+
+    /* Controls (optional) */
+    #video::-webkit-media-controls-play-button {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-right: 10px;
+    }
+
+    #video::-webkit-media-controls-fullscreen-button {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+
+    .filter-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .filter-container select,
+    .filter-container input {
+        padding: 5px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }

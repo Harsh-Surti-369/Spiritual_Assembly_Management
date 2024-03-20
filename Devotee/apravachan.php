@@ -3,7 +3,7 @@ session_start();
 include('../php/dbConnect.php');
 $devotee_id = $_SESSION['devotee_id'];
 $category = "pravachan";
-$allowed_extensions = array("mp4", "mov", "avi", "wmv", "webm");
+$allowed_extensions = array("mp3");
 
 $query_center = "SELECT center_id FROM tbl_devotee WHERE devotee_id = ?";
 $stmt_center = $conn->prepare($query_center);
