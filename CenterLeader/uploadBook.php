@@ -71,23 +71,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Upload</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/CenterLeader/uploadBook.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
     <link rel="stylesheet" href="../css/CenterLeader/header.css">
+    <style>
+        .container {
+            max-width: 800px;
+            background-color: #EFECEC;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #0C2D57;
+        }
+
+        .form-control {
+            border-color: #0C2D57;
+        }
+
+        .form-control:focus {
+            border-color: #FC6736;
+            box-shadow: 0 0 0 0.2rem rgba(252, 103, 54, 0.25);
+        }
+
+        .btn-primary {
+            background-color: #0C2D57;
+            color: #EFECEC;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0a2548;
+        }
+
+        .alert {
+            border-radius: 5px;
+            color: #0C2D57;
+            background-color: #FFB0B0;
+        }
+    </style>
 </head>
 
 <body>
     <?php include('header.php'); ?>
-    <div class="container mt-3">
-        <h1 class="text-center">Book Upload</h1>
 
+
+    <div class="container mt-3">
+        <h1 class="text-center mb-4">Book Upload</h1>
         <?php if (!empty($alertMessage)) : ?>
             <div class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
                 <?php echo $alertMessage; ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
-
         <form id="uploadBook" action="uploadBook.php" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="bookFileInput" class="form-label">Select Book</label>
@@ -101,17 +144,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="bookAuthorInput" class="form-label">Author</label>
                 <input class="form-control" type="text" id="bookAuthorInput" name="book_author" required>
             </div>
-
             <div class="mb-3">
                 <label for="bookDescriptionInput" class="form-label">Description</label>
                 <textarea class="form-control" id="bookDescriptionInput" name="book_description" required></textarea>
             </div>
-
             <button type="submit" class="btn btn-primary">Upload</button>
         </form>
         <div id="media-container"></div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jY3834LJq9CTBWzWIlchQAe/Kg" crossorigin="anonymous"></script>
 </body>
 

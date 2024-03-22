@@ -72,59 +72,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bhajan & Pravachan Upload</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
     <link rel="stylesheet" href="../css/CenterLeader/header.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            /* Set a default font */
-            background-image: url("/Spiritual_Assembly_Management/images/bACK\ gROUND\ 01.jpg");
+            background-image: url("../images/bACK\\ gROUND\\ 02.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .container {
             max-width: 800px;
-            /* Adjust container width as needed */
+            background-color: #EFECEC;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .form-label {
             font-weight: bold;
+            color: #0C2D57;
         }
 
         .form-group {
-            margin-bottom: 15px;
-            /* Add space between form groups */
+            margin-bottom: 1.5rem;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
+        .form-control {
+            border-color: #0C2D57;
+        }
+
+        .form-control:focus {
+            border-color: #FC6736;
+            box-shadow: 0 0 0 0.2rem rgba(252, 103, 54, 0.25);
         }
 
         select {
             width: 100%;
-            /* Make the select box fill the available space */
-            padding: 10px;
-            border: 1px solid #ccc;
+            padding: 0.5rem;
+            border: 1px solid #0C2D57;
             border-radius: 4px;
-            /* Add rounded corners */
             font-size: inherit;
-            /* Inherit font size from parent element */
+            color: #0C2D57;
         }
 
         .btn.btn-primary {
-            /* Assuming your button classes are "btn" and "btn-primary" */
             background-color: #0C2D57;
-            /* Adjust background color as needed */
-            color: #fff;
-            /* Adjust text color as needed */
+            color: #EFECEC;
             border: none;
-            padding: 10px 20px;
+            padding: 0.75rem 1.5rem;
             border-radius: 5px;
             display: block;
-            /* Make the button display as a block element */
-            margin: 15px auto;
-            /* Center the button horizontally */
-            width: 100px;
+            margin: 1.5rem auto 0;
+            width: auto;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn.btn-primary:hover {
+            background-color: #0a2548;
         }
     </style>
 </head>
@@ -132,8 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <?php include('header.php'); ?>
     <div class="container mt-3">
-        <h1 class="text-center">Bhajan & Pravachan </h1>
-
+        <h1 class="text-center mb-4">Bhajan & Pravachan</h1>
         <form id="uploadForm" action="uploadContent.php" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="fileInput" class="form-label">Select File</label>
@@ -152,8 +160,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input class="form-control" type="text" id="speakerInput" name="speaker">
             </div>
             <div class="form-group">
-                <label for="category">Category:</label>
-                <select id="category" name="category">
+                <label for="category" class="form-label">Category:</label>
+                <select id="category" name="category" class="form-control">
                     <option value="">Select Category</option>
                     <option value="bhajan">Bhajan</option>
                     <option value="pravachan">Pravachan</option>

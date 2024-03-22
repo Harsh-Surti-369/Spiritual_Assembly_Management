@@ -31,8 +31,8 @@
                                 Manage Sabha
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Sabha List</a></li>
-                                <li><a class="dropdown-item" href="#">Create new Sabha</a></li>
+                                <li><a class="dropdown-item" href="sabhaList.php">Sabha List</a></li>
+                                <li><a class="dropdown-item" href="createSabha.php">Create new Sabha</a></li>
                             </ul>
                         </li>
                     </ul>

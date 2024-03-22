@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Center Leader Q&A Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
     <link rel="stylesheet" href="../css/CenterLeader/header.css">
     <style>
         body {
@@ -45,7 +48,7 @@
 <body>
     <?php include('header.php'); ?>
     <div class="container">
-        <h1 class="mb-4">Center Leader Q&A Dashboard</h1>
+        <h1 class="mb-4">Question by Devotees</h1>
 
         <!-- Question table -->
         <table class="table question-table">
@@ -63,7 +66,6 @@
             </thead>
             <tbody>
                 <?php
-                session_start();
                 include('../php/dbConnect.php');
 
                 // Check if devotee_id is set in session
@@ -112,10 +114,8 @@
 
                     $stmt_center->close();
                 } else {
-                    echo "Devotee ID not found in session.";
                 }
 
-                $stmt->close(); // Close the prepared statement
                 $conn->close(); // Close the database connection
                 ?>
 

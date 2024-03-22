@@ -11,17 +11,13 @@ $totalSabhas = 0;
 $presentCount = 0;
 $attendancePercentage = 0;
 
-
-
 // Get the start and end dates for the selected period
 switch ($period) {
     case 'last_month':
         $currentDate = new DateTime();
         $currentDate->modify('last month');
-        $lastMonthSameDate = $currentDate->format('Y-m-d');
-        $startDate = $lastMonthSameDate;
-        // $ = date('Y-m-d', strtotime('-1 month')); // 30 days before today's date
-        $endDate = date('Y-m-d'); // Today's date
+        $startDate = $currentDate->format('Y-m-01'); // First day of last month
+        $endDate = date('Y-m-t', strtotime($startDate)); // Last day of last month
         break;
     case 'last_year':
         $startDate = date('Y-m-d', strtotime('-1 year')); // 365 days before today's date
@@ -45,45 +41,18 @@ switch ($period) {
         break;
 }
 
-$sql = "SELECT COUNT(*) AS total_sabhas, SUM(CASE WHEN attendance_status = 'Present' THEN 1 ELSE 0 END) AS present_count,
-            (SELECT COUNT(*) FROM tbl_sabha WHERE date BETWEEN ? AND ?) AS total_sabhas_in_period
-            FROM tbl_attendance
-            WHERE devotee_id = ?";
+// Fetch sabha details and attendance status for the selected period
+$sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, COALESCE(a.attendance_status, 'Absent') AS attendance_status, a.description
+                      FROM tbl_sabha s
+                      LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
+                      WHERE s.center_id = ? AND s.date BETWEEN ? AND ?
+                      ORDER BY s.date DESC";
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("sss", $startDate, $endDate, $devotee_id);
+$sabhaDetailsStmt = $conn->prepare($sabhaDetailsQuery);
+$sabhaDetailsStmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $startDate, $endDate);
+$sabhaDetailsStmt->execute();
+$sabhaDetailsResult = $sabhaDetailsStmt->get_result();
 
-if ($stmt->execute()) {
-    $result = $stmt->get_result();
-    // Retrieve the attendance data
-    if ($row = $result->fetch_assoc()) {
-        $totalSabhas = $row['total_sabhas'];
-        $presentCount = $row['present_count'];
-        $totalSabhasInPeriod = $row['total_sabhas_in_period'];
-        // print_r($row);
-        // Calculate the attendance percentage
-        if ($totalSabhasInPeriod > 0) {
-            $attendancePercentage = round(($presentCount / $totalSabhas) * 100, 2);
-        } else {
-            $attendancePercentage = 100; // Set 100% if no sabhas in the given period
-        }
-    }
-} else {
-    // Log or display the error
-    error_log("Error executing SQL query: " . $stmt->error);
-}
-// Retrieve the attendance data
-if ($row = $result->fetch_assoc()) {
-    $totalSabhas = $row['total_sabhas'];
-    $presentCount = $row['present_count'];
-}
-
-
-// Prepare chart data
-$dataPoints = array(
-    array("label" => "Present", "y" => $attendancePercentage),
-    array("label" => "Absent", "y" => 100 - $attendancePercentage)
-);
 ?>
 
 <!DOCTYPE html>
@@ -93,9 +62,11 @@ $dataPoints = array(
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
     <link rel="stylesheet" href="../css/Devotee/devoteeAttendance.css">
-    <link rel="stylesheet" href="../css/Devotee/header.css">
+    <link rel="stylesheet" href="../css/centerleader/header.css">
 </head>
 
 <body>
@@ -111,79 +82,77 @@ $dataPoints = array(
                     <option value="last_year" <?php echo ($period == 'last_year') ? 'selected' : ''; ?>>Last Year</option>
                     <option value="lifetime" <?php echo ($period == 'lifetime') ? 'selected' : ''; ?>>Lifetime</option>
                 </select>
-            </div>
-        </form>
-    </div>
 
-    <div id="sabhaDetailsComponent">
-        <!-- Right component with sabha details -->
-        <h1>All sabhas</h1>
-        <?php
-        // Fetch sabha details and attendance status for the selected period
-        $sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, COALESCE(a.attendance_status, 'Absent') AS attendance_status, a.description
+
+                <div id="sabhaDetailsComponent">
+                    <!-- Right component with sabha details -->
+                    <h1>All sabhas</h1>
+                    <?php
+                    // Fetch sabha details and attendance status for the selected period
+                    $sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, COALESCE(a.attendance_status, 'Absent') AS attendance_status, a.description
                       FROM tbl_sabha s
                       LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
                       WHERE s.center_id = ? AND s.date BETWEEN ? AND ?
                       ORDER BY s.date DESC";
 
-        $sabhaDetailsStmt = $conn->prepare($sabhaDetailsQuery);
-        $sabhaDetailsStmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $startDate, $endDate);
-        $sabhaDetailsStmt->execute();
-        $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
+                    $sabhaDetailsStmt = $conn->prepare($sabhaDetailsQuery);
+                    $sabhaDetailsStmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $startDate, $endDate);
+                    $sabhaDetailsStmt->execute();
+                    $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
 
-        if ($sabhaDetailsResult->num_rows > 0) {
-            $totalSabhas = $sabhaDetailsResult->num_rows;
-            echo "<p><strong>Total Sabhas: $totalSabhas</strong></p>";
+                    if ($sabhaDetailsResult->num_rows > 0) {
+                        $totalSabhas = $sabhaDetailsResult->num_rows;
+                        echo "<p><strong>Total Sabhas: $totalSabhas</strong></p>";
 
-            while ($row = $sabhaDetailsResult->fetch_assoc()) {
-                $sabhaTitle = $row['title'];
-                $sabhaDate = date('Y-m-d', strtotime($row['date']));
-                $sabhaSpeaker = $row['speaker'];
-                $attendanceStatus = $row['attendance_status'];
-                $description = $row['description'];
+                        while ($row = $sabhaDetailsResult->fetch_assoc()) {
+                            $sabhaTitle = $row['title'];
+                            $sabhaDate = date('Y-m-d', strtotime($row['date']));
+                            $sabhaSpeaker = $row['speaker'];
+                            $attendanceStatus = $row['attendance_status'];
+                            $description = $row['description'];
 
-                echo "<div class='sabha-details'>
+                            echo "<div class='sabha-details'>
                 <h3 class='title'>$sabhaTitle</h3>
                 <p><strong>Date:</strong> $sabhaDate</p>
                 <p><strong>Speaker:</strong> $sabhaSpeaker</p>
                 <p class='status'><strong>Attendance Status:</strong> $attendanceStatus</p>
                 <p><strong>Description:</strong> $description</p>
               </div>";
-            }
-        } else {
-            echo "<p>No sabhas found for the selected period.</p>";
-        }
-        ?>
+                        }
+                    } else {
+                        echo "<p>No sabhas found for the selected period.</p>";
+                    }
+                    ?>
 
-    </div>
+                </div>
 
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        $(document).ready(function() {
-            var chart = new CanvasJS.Chart("chartContainer", {
-                animationEnabled: true,
-                exportEnabled: true,
-                title: {
-                    text: "Attendance Percentage"
-                },
-                subtitles: [{
-                    text: "Pie Chart"
-                }],
-                data: [{
-                    type: "pie",
-                    showInLegend: true,
-                    legendText: "{label}",
-                    indexLabelFontSize: 16,
-                    indexLabel: "{label} - #percent%",
-                    yValueFormatString: "#0.#",
-                    dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-                }]
-            });
-            chart.render();
-        });
-    </script>
+                <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                <script>
+                    $(document).ready(function() {
+                        var chart = new CanvasJS.Chart("chartContainer", {
+                            animationEnabled: true,
+                            exportEnabled: true,
+                            title: {
+                                text: "Attendance Percentage"
+                            },
+                            subtitles: [{
+                                text: "Pie Chart"
+                            }],
+                            data: [{
+                                type: "pie",
+                                showInLegend: true,
+                                legendText: "{label}",
+                                indexLabelFontSize: 16,
+                                indexLabel: "{label} - #percent%",
+                                yValueFormatString: "#0.#",
+                                dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                            }]
+                        });
+                        chart.render();
+                    });
+                </script>
 </body>
 
 </html>

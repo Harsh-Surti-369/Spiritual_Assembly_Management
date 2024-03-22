@@ -1,54 +1,61 @@
+<?php session_start();; ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sabha List</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/CenterLeader/header.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
+    <title>Sabha List</title>
     <style>
         body {
             background-color: #EFECEC;
-        }
-
-        .container {
-            background-color: #FFFFFF;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+            color: #0C2D57;
         }
 
         .sabha-card {
             border: none;
             border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .sabha-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         .sabha-card-header {
-            background-color: #FC6736;
-            color: #FFFFFF;
-            border-radius: 10px 10px 0 0;
-            padding: 10px;
+            background-color: #0C2D57;
+            color: #EFECEC;
             font-weight: bold;
-            text-align: center;
+            padding: 1rem;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
         }
 
         .sabha-card-body {
-            padding: 20px;
-            color: #0C2D57;
+            padding: 1.5rem;
         }
 
         .btn-take-attendance {
-            background-color: #0C2D57;
+            background-color: #FC6736;
+            color: #EFECEC;
             border: none;
-            color: #FFFFFF;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
 
         .btn-take-attendance:hover {
-            background-color: #FC6736;
+            background-color: #e05b2d;
+        }
+
+        .text-success {
+            color: #0C2D57;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -58,15 +65,10 @@
     <div class="container">
         <h2 class="text-center mb-4">Sabha List</h2>
         <div class="row">
-            <?php
-            session_start();
-            include('../php/dbConnect.php');
-
+            <?php include('../php/dbConnect.php');
             $center_id = $_SESSION['center_id'];
-
             $sql = "SELECT * FROM tbl_sabha WHERE center_id = $center_id";
             $result = $conn->query($sql);
-
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     $sabha_id = $row['sabha_id'];
@@ -77,13 +79,12 @@
                     $timing_from = $row['timing_from'];
                     $timing_to = $row['timing_to'];
                     $location = $row['location'];
-
                     // Check if attendance is already taken for this sabha
                     $sql_attendance = "SELECT * FROM tbl_attendance WHERE sabha_id = '$sabha_id'";
                     $result_attendance = $conn->query($sql_attendance);
                     $attendance_taken = ($result_attendance && $result_attendance->num_rows > 0) ? true : false;
             ?>
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-4">
                         <div class="card sabha-card">
                             <div class="card-header sabha-card-header">
                                 <?php echo $title; ?>
@@ -95,11 +96,6 @@
                                 <p><strong>Timing:</strong> <?php echo $timing_from . ' - ' . $timing_to; ?></p>
                                 <p><strong>Location:</strong> <?php echo $location; ?></p>
                                 <?php
-                                // Check if attendance has been taken for this sabha
-                                $sql_attendance = "SELECT * FROM tbl_attendance WHERE sabha_id = $sabha_id";
-                                $result_attendance = $conn->query($sql_attendance);
-                                $attendance_taken = ($result_attendance && $result_attendance->num_rows > 0) ? true : false;
-
                                 if (!$attendance_taken) {
                                     // Attendance not taken, display link to take attendance
                                     echo "<a href='takeAttendance.php?sabha_id=" . $sabha_id . "' class='btn btn-take-attendance'>Take Attendance</a>";
@@ -119,6 +115,10 @@
             ?>
         </div>
     </div>
+
+    <script>
+        
+    </script>
 </body>
 
 </html>
