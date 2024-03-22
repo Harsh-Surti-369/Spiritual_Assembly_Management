@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Center Leader Q&A</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/CenterLeader/header.css">
     <style>
         body {
             background-color: #EFECEC;
@@ -48,6 +49,7 @@
 </head>
 
 <body>
+    <?php include('header.php'); ?>
     <div class="container">
         <?php
         session_start();

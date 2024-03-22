@@ -95,9 +95,11 @@ $dataPoints = array(
     <title>Attendance</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/Devotee/devoteeAttendance.css">
+    <link rel="stylesheet" href="../css/Devotee/header.css">
 </head>
 
 <body>
+    <?php include('header.php'); ?>
     <div id="attendanceComponent">
         <h1>Devotee Attendance</h1>
         <div id="chartContainer"></div>

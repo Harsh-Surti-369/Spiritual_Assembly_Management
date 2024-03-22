@@ -7,9 +7,11 @@
     <title>Manage Devotees</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/CenterLeader/managedevotees.css">
+    <link rel="stylesheet" href="../css/CenterLeader/header.css">
 </head>
 
 <body>
+    <?php include('header.php'); ?>
     <div class="container">
         <h2 class="text-center mb-4">Manage Devotees</h2>
         <?php

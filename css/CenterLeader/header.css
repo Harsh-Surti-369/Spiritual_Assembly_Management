@@ -1,0 +1,57 @@
+header {
+    margin-bottom: 5rem;
+}
+
+.navbar {
+    background-color: #EFECEC;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    color: #0C2D57;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+    color: #0C2D57;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: #FC6736;
+}
+
+.navbar-toggler {
+    border-color: #0C2D57;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(12, 45, 87, 0.7)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.offcanvas {
+    background-color: #EFECEC;
+}
+
+.offcanvas-header {
+    background-color: #0C2D57;
+    color: #EFECEC;
+}
+
+.dropdown-menu {
+    background-color: #EFECEC;
+    border-color: #0C2D57;
+}
+
+.dropdown-item {
+    color: #0C2D57;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: #FC6736;
+    color: #EFECEC;
+}

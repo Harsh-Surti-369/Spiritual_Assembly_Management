@@ -46,9 +46,11 @@ if (isset($_GET['devotee_id'])) {
     <title>Update Devotee</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/CenterLeader/updatedevotee.css">
+    <link rel="stylesheet" href="../css/CenterLeader/updatedevotee.css">
 </head>
 
 <body>
+    <?php include('header.php'); ?>
     <div class="container">
         <h2 class="my-4">Update Devotee</h2>
         <form action="updateDevotee.php?devotee_id=<?php echo $devotee_id; ?>" method="post">
