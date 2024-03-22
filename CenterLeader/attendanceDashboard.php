@@ -4,7 +4,7 @@ include('../php/dbConnect.php');
 
 // Get the selected period from the URL
 $period = isset($_GET['period']) ? $_GET['period'] : 'lifetime';
-$devotee_id = $_SESSION['devotee_id'];
+$devotee_id = $_GET['devotee_id'];
 
 // Define variables to store attendance data
 $totalSabhas = 0;
@@ -104,7 +104,7 @@ $dataPoints = array(
         <form id="attendanceForm" method="get">
             <div class="form-group">
                 <label for="timePeriod">Select Time Period:</label>
-                <select class="form-control" id="timePeriod" name="period" onchange="this.form.action = 'devoteeAttendance.php?period=' + this.value; this.form.submit();">
+                <select class="form-control" id="timePeriod" name="period" onchange="this.form.action = 'attendanceDashboard.php?devotee_id=<?php echo $devotee_id; ?>&period=' + this.value; this.form.submit();">
                     <option value="last_month" <?php echo ($period == 'last_month') ? 'selected' : ''; ?>>Last Month</option>
                     <option value="last_year" <?php echo ($period == 'last_year') ? 'selected' : ''; ?>>Last Year</option>
                     <option value="lifetime" <?php echo ($period == 'lifetime') ? 'selected' : ''; ?>>Lifetime</option>

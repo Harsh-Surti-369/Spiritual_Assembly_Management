@@ -52,10 +52,6 @@
         font-size: 16px;
     }
 
-
-
-
-
     #video-list {
         display: flex;
         flex-wrap: wrap;
@@ -129,4 +125,9 @@
         margin-right: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
+    }
+
+    .btn {
+        position: relative;
+        bottom: 0px;
     }

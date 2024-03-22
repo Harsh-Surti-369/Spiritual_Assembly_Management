@@ -57,19 +57,19 @@ if ($row_center = $result_center->fetch_assoc()) {
     $stmt->execute();
     $result = $stmt->get_result();
 }
-// function addToFavorites($id, $type, $devotee_id, $conn)
-// {
-//     $query = "INSERT INTO favorites (id, type, devotee_id) VALUES (?, ?, ?)";
-//     $stmt = $conn->prepare($query);
-//     $stmt->bind_param("ssi", $id, $type, $devotee_id); // "ssi" indicates string, string, integer for the bind_param
-//     $stmt->execute();
-// }
+function addToFavorites($id, $type, $devotee_id, $conn)
+{
+    $query = "INSERT INTO favorites (id, type, devotee_id) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ssi", $id, $type, $devotee_id); // "ssi" indicates string, string, integer for the bind_param
+    $stmt->execute();
+}
 
-// if (isset($_POST['add_to_favorites'])) {
-//     $id = $_POST['id'];
-//     $type = $_POST['type']; // Assuming you'll pass the type along with the ID in the AJAX request
-//     addToFavorites($id, $type, $devotee_id, $conn);
-// }
+if (isset($_POST['add_to_favorites'])) {
+    $id = $_POST['id'];
+    $type = $_POST['type']; // Assuming you'll pass the type along with the ID in the AJAX request
+    addToFavorites($id, $type, $devotee_id, $conn);
+}
 
 ?>
 <!DOCTYPE html>
@@ -333,7 +333,7 @@ if ($row_center = $result_center->fetch_assoc()) {
                 method: 'POST',
                 data: {
                     id: id,
-                    type: type 
+                    type: type
                 },
                 success: function(response) {
                     console.log('Response:', response); // Check the response from the server

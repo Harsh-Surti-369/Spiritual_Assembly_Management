@@ -85,13 +85,8 @@ $result = $stmt->get_result();
                     <div class='video mb-3'>
                         <h3 class='video-title'><?php echo $title; ?></h3>
                         <p class='video-description'><?php echo $description; ?></p>
-                        <button class="btn btn-primary" onclick="playVideo(<?php echo $id; ?>, '<?php echo $title; ?>', '<?php echo $description; ?>', '<?php echo $file_path; ?>')">Watch</button>
-                        <button class="btn btn-success add-to-favourites-btn" onclick="addToFavorites(<?php echo $id; ?>)">
-                            Add to Favorites
-                        </button>
+                        <button class="btn btn-outline-primary ml-2 my-2" onclick="playVideo(<?php echo $id; ?>, '<?php echo $title; ?>', '<?php echo $description; ?>', '<?php echo $file_path; ?>')">Watch</button>
                     </div>
-
-
             <?php
                 }
             }
