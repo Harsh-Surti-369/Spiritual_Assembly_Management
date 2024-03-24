@@ -1,3 +1,7 @@
+<?php
+session_start();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -55,7 +59,6 @@
     <?php include('header.php'); ?>
     <div class="container">
         <?php
-        session_start();
         include('../php/dbConnect.php');
         // Check if QID is provided in the URL
         if (isset($_GET['qid'])) {
