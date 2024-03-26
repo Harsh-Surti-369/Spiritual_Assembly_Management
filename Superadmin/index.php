@@ -17,18 +17,10 @@ $devoteeCountQuery = "SELECT COUNT(*) AS devotee_count FROM tbl_devotee";
 $devoteeCountResult = mysqli_query($conn, $devoteeCountQuery);
 $devoteeCount = mysqli_fetch_assoc($devoteeCountResult)['devotee_count'];
 
-// Fetch the number of centers
-$centersQuery = "SELECT COUNT(*) AS total_centers FROM tbl_center";
-$centersResult = mysqli_query($conn, $centersQuery);
-$totalCenters = mysqli_fetch_assoc($centersResult)['total_centers'];
 
-// Fetch the number of devotees
-$devoteesQuery = "SELECT COUNT(*) AS total_devotees FROM tbl_devotee";
-$devoteesResult = mysqli_query($conn, $devoteesQuery);
-$totalDevotees = mysqli_fetch_assoc($devoteesResult)['total_devotees'];
+
 // Step 1: Data Retrieval
 // Connect to the database and retrieve data for all centers
-// Assuming you have a database connection established already
 $sql = "SELECT c.center_name, COUNT(d.devotee_id) AS devotee_count
         FROM tbl_center c
         LEFT JOIN tbl_devotee d ON c.center_id = d.center_id
@@ -55,7 +47,6 @@ if ($result->num_rows > 0) {
         exit; // Stop further execution
     }
 } else {
-    echo "No centers found.";
 }
 ?>
 <!DOCTYPE html>
@@ -65,10 +56,7 @@ if ($result->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbpjJcH3zYLnsK1znEMxkYvz9yX7Kt8rrG+2oVzxsRt3HUcqzS8k9/XmW" crossorigin="anonymous">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
         .bg-primary {
             background-color: #0C2D57 !important;
@@ -123,10 +111,10 @@ if ($result->num_rows > 0) {
                         <a class="nav-link" href="index.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Centers</a>
+                        <a class="nav-link" href="centers.php">Centers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Devotees</a>
+                        <a class="nav-link" href="devotees.php">Devotees</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="content.php">Content</a>
@@ -135,7 +123,7 @@ if ($result->num_rows > 0) {
                         <a class="nav-link" href="#">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Settings</a>
+                        <a class="nav-link" href="profile.php">Profile</a>
                     </li>
                 </ul>
             </div>
@@ -150,6 +138,7 @@ if ($result->num_rows > 0) {
                         <div class="card-body">
                             <h5 class="card-title">Total Centers</h5>
                             <p class="card-text display-4"><?php echo $centerCount; ?></p>
+                            <a class="" href="centers.php">View All</a>
                         </div>
                     </div>
                 </div>
@@ -158,6 +147,7 @@ if ($result->num_rows > 0) {
                         <div class="card-body">
                             <h5 class="card-title">Total Devotees</h5>
                             <p class="card-text display-4"><?php echo $devoteeCount; ?></p>
+                            <a class="" href="devotees.php">View All</a>
                         </div>
                     </div>
                 </div>
@@ -165,107 +155,7 @@ if ($result->num_rows > 0) {
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Centers List</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Center Name</th>
-                                <th>Location</th>
-                                <th>Leader Name</th>
-                                <th>Devotees</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $centersQuery = "SELECT c.center_name, c.location, l.name AS leader_name, COUNT(d.center_id) AS total_devotees
-                                        FROM tbl_center c
-                                        LEFT JOIN tbl_leader l ON c.leader_id = l.leader_id
-                                        LEFT JOIN tbl_devotee d ON c.center_id = d.center_id
-                                        GROUP BY c.center_id";
-                            $centersResult = mysqli_query($conn, $centersQuery);
-                            while ($row = mysqli_fetch_assoc($centersResult)) {
-                                echo "<tr>";
-                                echo "<td>" . $row['center_name'] . "</td>";
-                                echo "<td>" . $row['location'] . "</td>";
-                                echo "<td>" . $row['leader_name'] . "</td>";
-                                echo "<td>" . $row['total_devotees'] . "</td>";
-                                echo "<td>
-                                    <a href='#' class='btn btn-sm btn-primary'>View</a>
-                                    <a href='#' class='btn btn-sm btn-secondary'>Edit</a>
-                                    <a href='#' class='btn btn-sm btn-danger'>Delete</a>
-                                  </td>";
-                                echo "</tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Devotees List</h5>
-                    <div class="d-flex justify-content-end mb-3">
-                        <select class="form-select form-select-sm" id="centerFilter">
-                            <option value="">All Centers</option>
-                            <?php
-                            // Fetch all centers from the database
-                            $centersQuery = "SELECT center_id, center_name FROM tbl_center";
-                            $centersResult = mysqli_query($conn, $centersQuery);
-                            while ($row = mysqli_fetch_assoc($centersResult)) {
-                                echo "<option value='" . $row['center_id'] . "'>" . $row['center_name'] . "</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Devotee Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Center</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $devoteesQuery = "SELECT name, email, mobile_number, c.center_name
-                                FROM tbl_devotee d
-                                LEFT JOIN tbl_center c ON d.center_id = c.center_id";
-                            $devoteesResult = mysqli_query($conn, $devoteesQuery);
-                            while ($row = mysqli_fetch_assoc($devoteesResult)) {
-                                echo "<tr>";
-                                echo "<td>" . $row['name'] . "</td>";
-                                echo "<td>" . $row['email'] . "</td>";
-                                echo "<td>" . $row['mobile_number'] . "</td>";
-                                echo "<td>" . $row['center_name'] . "</td>";
-                                echo "<td>
-                                    <a href='#' class='btn btn-sm btn-primary'>View</a>
-                                    <a href='#' class='btn btn-sm btn-secondary'>Edit</a>
-                                    <a href='#' class='btn btn-sm btn-danger'>Delete</a>
-                                  </td>";
-                                echo "</tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <div class="mb-3" id="chartContainer" style="height: 370px; width: 100%;"></div>
 
     <div class="row">
         <div class="col-md-12 mb-4">

@@ -71,7 +71,7 @@ $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
 
 <body>
     <?php include('header.php'); ?>
-    <div id="attendanceComponent">
+    <div id="attendanceComponent" stye="padding-top:50px;">
         <h1>Devotee Attendance</h1>
         <div id="chartContainer"></div>
         <form id="attendanceForm" method="get">

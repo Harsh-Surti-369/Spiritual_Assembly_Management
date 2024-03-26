@@ -123,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include('header.php'); ?>
 
 
-    <div class="container mt-3">
+    <div class="container mt-3" stye="padding-top:50px;">
         <h1 class="text-center mb-4">Book Upload</h1>
         <?php if (!empty($alertMessage)) : ?>
             <div class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">

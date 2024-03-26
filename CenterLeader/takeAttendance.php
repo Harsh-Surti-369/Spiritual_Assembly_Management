@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <?php include('header.php'); ?>
-    <div class="container">
+    <div class="container" stye="padding-top:50px;">
         <h2 class="text-center mb-4">Take Attendance</h2>
         <form id="attendanceForm" action="takeAttendance.php?sabha_id=<?php echo $_GET['sabha_id']; ?>" method="post">
             <div class="form-group">

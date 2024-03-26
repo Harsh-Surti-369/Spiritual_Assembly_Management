@@ -23,7 +23,7 @@ $sql = "INSERT INTO tbl_devotee (name, email, password, dob, gender, mobile_numb
 if (mysqli_query($conn, $sql)) {
     // Redirect to the login page with success message
     $_SESSION['signup_success'] = "You have successfully signed up!";
-    header("Location: ../devotee/login.html");
+    header("Location: ../devotee/login.php");
 } else {
     // Redirect to the signup page with error message
     $_SESSION['signup_error'] = "Error: " . $sql . "<br>" . mysqli_error($conn);

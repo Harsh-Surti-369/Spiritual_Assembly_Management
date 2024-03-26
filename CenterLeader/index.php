@@ -16,7 +16,9 @@
     <?php
     include('header.php');
     ?>
-    <div class="container">
+    <div class="container-fluid mt-5" stye="position: relative;
+  z-index: 1001;
+  padding-top: 120px;">
         <h2 class="text-center mb-4">Manage Devotees</h2>
         <?php
         session_start();

@@ -92,7 +92,7 @@ $conn->close();
 
 <body>
     <?php include('header.php'); ?>
-    <div class="container my-5">
+    <div class="container my-5" stye="padding-top:50px;">
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 <h2 class="text-center">Create Sabha</h2>

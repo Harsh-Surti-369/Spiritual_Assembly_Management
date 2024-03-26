@@ -1,8 +1,11 @@
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="height: 110px;position: fixed;top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">
-                <img src="../images/logo.jpg" class="logo" alt="Logo" style="max-height: 40px;">
+                <img src="../images/Logo.png" class="logo" alt="Logo" style="width:9rem; height:auto;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvas" aria-controls="navbarOffcanvas" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -25,6 +28,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="qlist.php">QnA</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="profile.php">Profile</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

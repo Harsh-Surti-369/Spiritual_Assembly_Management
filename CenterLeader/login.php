@@ -33,17 +33,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     header("Location: ../centerleader/index.php");
                     exit();
                 } else {
-                    header("Location: ../CenterLeader/leaderDetail.html");
                     exit();
                 }
             } else {
-                echo "Failed to fetch center ID.";
             }
         } else {
-            echo "Invalid email or password";
         }
     } else {
-        echo "Invalid email or password";
     }
 }
 ?>

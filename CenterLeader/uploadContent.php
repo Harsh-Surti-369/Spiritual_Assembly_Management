@@ -140,7 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <?php include('header.php'); ?>
-    <div class="container mt-3">
+    <div class="container mt-3" stye="padding-top:50px;">
         <h1 class="text-center mb-4">Bhajan & Pravachan</h1>
         <form id="uploadForm" action="uploadContent.php" method="post" enctype="multipart/form-data">
             <div class="mb-3">

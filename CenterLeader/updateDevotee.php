@@ -53,7 +53,7 @@ if (isset($_GET['devotee_id'])) {
 
 <body>
     <?php include('header.php'); ?>
-    <div class="container">
+    <div class="container" stye="padding-top:50px;">
         <h2 class="my-4">Update Devotee</h2>
         <form action="updateDevotee.php?devotee_id=<?php echo $devotee_id; ?>" method="post">
             <input type="hidden" name="devotee_id" value="<?php echo $devotee_id; ?>">

@@ -62,7 +62,7 @@
 
 <body>
     <?php include('header.php'); ?>
-    <div class="container">
+    <div class="container" stye="padding-top:50px;">
         <h2 class="text-center mb-4">Sabha List</h2>
         <div class="row">
             <?php include('../php/dbConnect.php');
