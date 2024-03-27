@@ -13,21 +13,18 @@
         <div class="card rounded-3 text-black shadow-lg d3">
             <div class="card-body p-md-5 mx-md-4">
                 <div class="text-center">
-                    <img src="https://yt3.googleusercontent.com/h-7oh6u7mXrnxy_9BKLdg2CA2pjIx_jADK5ocj6Y4-T60yFPoLlRNgH3bFK2Vu__GRysIMcnaEI=s176-c-k-c0x00ffffff-no-rj"
-                        style="width: 185px;" alt="logo" class="my-1 rounded-circle logo">
+                    <img src="../images/Logo.png" style="width: 185px;" alt="logo" class="my-1 rounded-circle logo">
                     <h2 class="text-center mb-4">Prabodham Weekly Assembly</h2>
                     <h3 class="text-center mb-4">Devotee Login</h3>
                 </div>
-                <form id="superAdminLoginForm" action="../php/Dlogin.php" method="post"
-                    onsubmit="return validateForm()">
+                <form id="superAdminLoginForm" action="../php/Dlogin.php" method="post" onsubmit="return validateForm()">
                     <div class="form-group mb-4">
                         <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
                         <label class="form-label" for="email">Email</label>
                         <span id="emailError" class="text-danger"></span>
                     </div>
                     <div class="form-group mb-4">
-                        <input type="password" name="password" id="password" class="form-control" placeholder="Password"
-                            required>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
                         <label class="form-label" for="password">Password</label>
                         <br><span id="passwordError" class="text-danger"></span>
                     </div>

@@ -170,19 +170,19 @@ $bhajanAudioData = fetchBhajanAudioData();
                         <a class="nav-link" href="index.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Centers</a>
+                        <a class="nav-link" href="centers.php">Centers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Devotees</a>
+                        <a class="nav-link" href="devotees.php">Devotees</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="content.php">Content</a>
+                        <a class="nav-link" href="content.php">Content</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Settings</a>
+                        <a class="nav-link" href="profile.php">Profile</a>
                     </li>
                 </ul>
             </div>

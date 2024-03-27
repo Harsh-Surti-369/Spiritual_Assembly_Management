@@ -153,13 +153,12 @@ $centers = fetchCenterData();
                         <a class="nav-link" href="#">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Settings</a>
+                        <a class="nav-link" href="profile.php">Profile</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-
     <div class="container mt-4">
         <h1 class="mb-4">Centers Management</h1>
 
@@ -192,7 +191,7 @@ $centers = fetchCenterData();
                         <td><?php echo $center['starting_date']; ?></td>
                         <td><?php echo $center['leader_name']; ?></td>
                         <td>
-                         
+
                             <a href="edit_center.php?id=<?php echo $center['center_id']; ?>" class="btn btn-sm btn-primary">Edit</a>
                             <button class="btn btn-danger btn-sm" onclick="openConfirmDeleteModal(<?php echo $center['center_id']; ?>)">Delete</button>
                         </td>

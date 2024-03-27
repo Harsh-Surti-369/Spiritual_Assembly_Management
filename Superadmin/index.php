@@ -157,8 +157,7 @@ if ($result->num_rows > 0) {
 
     <div class="mb-3" id="chartContainer" style="height: 370px; width: 100%;"></div>
 
-    <div class="row">
-        <div class="col-md-12 mb-4">
+<!-- <div class="row">      <div class="col-md-12 mb-4">
             <div class="card">
                 <div class="card-header bg-secondary">
                     <h5 class="card-title text-primary">Center Attendance</h5>

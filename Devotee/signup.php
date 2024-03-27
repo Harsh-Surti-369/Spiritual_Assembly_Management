@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         <div class="form-container">
-            <img src="https://yt3.googleusercontent.com/h-7oh6u7mXrnxy_9BKLdg2CA2pjIx_jADK5ocj6Y4-T60yFPoLlRNgH3bFK2Vu__GRysIMcnaEI=s176-c-k-c0x00ffffff-no-rj" alt="Logo" class="logo rounded-circle">
+            <img src="../images/Logo.png" alt="Logo" class="logo rounded-circle">
             <h2 class="text-center mb-4">Prabodham Weekly Assembly</h2>
             <h3 class="text-center mb-4">Devotee Signup</h3>
             <form action="../php/Dsignup.php" method="post" id="signupForm" onsubmit="return validateForm()">

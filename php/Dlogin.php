@@ -20,13 +20,13 @@ if (mysqli_num_rows($result) == 1) {
         header("Location: ../devotee/index.php");
     } else {
         $_SESSION['login_error'] = "Invalid email or password";
-        header("Location: ../devotee/login.html");
+        header("Location: ../devotee/login.php");
         exit();
     }
 } else {
 
     $_SESSION['login_error'] = "Invalid email or password";
-    header("Location: ../devotee/login.html");
+    header("Location: ../devotee/login.php");
     exit();
 }
 

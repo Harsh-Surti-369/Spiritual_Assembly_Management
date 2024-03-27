@@ -213,8 +213,8 @@
                   listen
                 </button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="../abhajan.php">Bhajan</a>
-                  <a class="dropdown-item" href="../apravachan.php">Pravachan</a>
+                  <a class="dropdown-item" href="abhajan.php">Bhajan</a>
+                  <a class="dropdown-item" href="apravachan.php">Pravachan</a>
                 </div>
               </div>
             </div>
@@ -228,8 +228,8 @@
                   watch
                 </button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="../abhajan.php">Bhajan</a>
-                  <a class="dropdown-item" href="../apravachan.php">Pravachan</a>
+                  <a class="dropdown-item" href="vbhajan.php">Bhajan</a>
+                  <a class="dropdown-item" href="vpravachan.php">Pravachan</a>
                 </div>
               </div>
             </div>

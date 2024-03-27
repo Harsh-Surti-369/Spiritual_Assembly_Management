@@ -20,8 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                              VALUES ('$title', '$description', '$speaker', '$sabhaType', '$timingFrom', '$timingTo', '$location', '$date', '$center_id')";
 
         if ($conn->query($sql_insert_sabha) === TRUE) {
-            header("Location : sabhalist.php;");
-            echo "New Sabha created successfully";
+            header("Location: sabhalist.php");
+            exit(); // Ensure that code execution stops after redirection
         } else {
             echo "Error creating Sabha: " . $conn->error;
         }
@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 

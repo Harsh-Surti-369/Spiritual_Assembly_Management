@@ -50,7 +50,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary mb-5">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Admin Dashboard</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
                         <a class="nav-link" href="#">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Settings</a>
+                        <a class="nav-link" href="profile.php">Profile</a>
                     </li>
                 </ul>
             </div>
@@ -86,7 +86,7 @@
                 <div class="card rounded-3 text-black shadow-lg d3">
                     <div class="card-body p-md-5 mx-md-4">
                         <div class="text-center">
-                            <img src="https://yt3.googleusercontent.com/h-7oh6u7mXrnxy_9BKLdg2CA2pjIx_jADK5ocj6Y4-T60yFPoLlRNgH3bFK2Vu__GRysIMcnaEI=s176-c-k-c0x00ffffff-no-rj" style="width: 185px;" alt="logo" class="my-1 rounded-circle logo">
+                            <img src="../images/Logo.png" style="width: 185px;" alt="logo" class="my-1 rounded-circle logo">
                             <h3 class="mt-1 mb-5 pb-1 brand">Prabodham Weekly Assembly</h3>
                         </div>
                         <form action="createCenter.php" method="post" id="createCenter" onsubmit="return validateForm()">
@@ -112,8 +112,7 @@
                                 <br><span id="passwordError" class="text-danger"></span>
                             </div>
                             <div class="text-center pt-1 mb-1 pb-1">
-                                <button class="btn btn-block fa-lg mb-1 gradient-custom-2 submit" type="submit">Log
-                                    in</button>
+                                <button class="btn btn-block fa-lg mb-1 gradient-custom-2 submit" type="submit">Create center</button>
                             </div>
                         </form>
                     </div>

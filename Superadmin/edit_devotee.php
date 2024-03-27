@@ -117,7 +117,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <!-- Add navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Admin Dashboard</a>
@@ -142,13 +141,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <a class="nav-link" href="#">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Settings</a>
+                        <a class="nav-link" href="profile.php">Profile</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-
     <div class="container mt-4">
         <h1 class="mb-4">Edit Devotee</h1>
         <form method="post">

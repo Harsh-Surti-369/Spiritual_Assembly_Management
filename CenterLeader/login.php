@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="card rounded-3 text-black shadow-lg d3">
             <div class="card-body p-md-5 mx-md-4">
                 <div class="text-center">
-                    <img src="../images/logo.jpg" style="width: 185px;" alt="logo" class="my-1 rounded-circle logo">
+                    <img src="../images/logo.png" style="width: 185px;" alt="logo" class="my-1 rounded-circle logo">
                     <h2 class="text-center mb-4">Prabodham Weekly Assembly</h2>
                     <h3 class="text-center mb-4">Center Leader</h3>
                 </div>

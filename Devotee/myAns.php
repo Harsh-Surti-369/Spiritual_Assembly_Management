@@ -108,7 +108,7 @@ $result = $conn->query($sql);
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="text-primary">My Asked Questions</h1>
-            <a href="ask_question.php" class="btn btn-primary">Ask New Question</a>
+            <a href="askquestion.php" class="btn btn-primary">Ask New Question</a>
         </div>
 
         <?php if (!empty($alertMessage)) : ?>

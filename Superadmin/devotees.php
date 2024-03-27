@@ -128,7 +128,6 @@ $devotees = fetchDevoteeData();
 </head>
 
 <body>
-    <!-- Add navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Admin Dashboard</a>
@@ -153,7 +152,7 @@ $devotees = fetchDevoteeData();
                         <a class="nav-link" href="#">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Settings</a>
+                        <a class="nav-link" href="profile.php">Profile</a>
                     </li>
                 </ul>
             </div>
