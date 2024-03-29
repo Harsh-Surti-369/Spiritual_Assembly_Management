@@ -1,57 +1,57 @@
 body {
-background: url('../images/bACK\ gROUND\ 02.jpg');
+    background: url('../../images/bgCanada.png');
 }
 
 #attendanceComponent {
-width: 50vw;
-height: 100vh;
-position: fixed;
-top: 0;
-left: 0;
-padding: 20px;
-border-right: 1px solid #dee2e6;
+    width: 50vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    border-right: 1px solid #dee2e6;
 }
 
 #sabhaDetailsComponent {
-width: 50vw;
-height: 100vh;
-position: fixed;
-top: 0;
-right: 0;
-padding: 20px;
-overflow-y: auto;
+    width: 50vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 20px;
+    overflow-y: auto;
 }
 
 #chartContainer {
-height: 70%;
+    height: 70%;
 }
 
 #attendanceForm {
-margin-top: 20px;
+    margin-top: 20px;
 }
 
 h1 {
-margin-bottom: 20px;
-font-size: 24px;
+    margin-bottom: 20px;
+    font-size: 24px;
 }
 
 #chartContainer .canvasjs-chart-canvas {
-margin: 0 auto;
+    margin: 0 auto;
 }
 
 .sabha-details {
-background-color: #EFECEC;
-margin-bottom: 20px;
-padding: 10px;
-border: 1px solid #dee2e6;
-border-radius: 4px;
+    background-color: #EFECEC;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
 }
 
 .status {
-color: #FC6736;
-font-weight: bold;
+    color: #FC6736;
+    font-weight: bold;
 }
 
 .title {
-color: #0C2D57;
+    color: #0C2D57;
 }

@@ -18,6 +18,7 @@ session_start();
         body {
             background-color: #EFECEC;
             color: #0C2D57;
+            padding-top: 40px;  
         }
 
         .container {
