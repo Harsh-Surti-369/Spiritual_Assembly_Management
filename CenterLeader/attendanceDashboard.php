@@ -6,14 +6,19 @@ include('../php/dbConnect.php');
 $period = isset($_GET['period']) ? $_GET['period'] : 'lifetime';
 $devotee_id = $_GET['devotee_id'];
 
-// Define variables to store attendance data
-$totalSabhas;
+$totalSabhas = 0;
+$presentCount = 0;
+$attendancePercentage = 0;
+
 
 // Get the start and end dates for the selected period
 switch ($period) {
     case 'last_month':
-        $startDate = date('Y-m-d', strtotime('first day of last month'));
-        $endDate = date('Y-m-d', strtotime('last day of last month'));
+        $currentDate = new DateTime();
+        $currentDate->modify('last month');
+        $lastMonthSameDate = $currentDate->format('Y-m-d');
+        $startDate = $lastMonthSameDate;
+        $endDate = date('Y-m-d'); // Today's date
         break;
     case 'last_year':
         $startDate = date('Y-m-d', strtotime('-1 year'));
@@ -49,6 +54,11 @@ $sabhaDetailsStmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $star
 $sabhaDetailsStmt->execute();
 $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
 
+
+$datapoints = array(
+    array("label" => "Present", "y" => $attendancePercentage),
+    array("label" => "Absent", "y" => 100 - $attendancePercentage)
+);
 ?>
 
 <!DOCTYPE html>
@@ -80,7 +90,8 @@ $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
         </div>
         <!-- End of Toast -->
         <div id="chartContainer"></div>
-        <form id="attendanceForm" method="get" action="attendanceDashboard.php?devotee_id=<?php echo $devotee_id; ?>">
+        <form id="attendanceForm" method="get" action="attendanceDashboard.php">
+            <input type="hidden" name="devotee_id" value="<?php echo $devotee_id; ?>">
             <div class="form-group">
                 <label for="timePeriod">Select Time Period:</label>
                 <select class="form-control" id="timePeriod" name="period" onchange="this.form.submit();">
@@ -90,6 +101,7 @@ $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
                 </select>
             </div>
         </form>
+
         <div id="sabhaDetailsComponent">
             <!-- Right component with sabha details -->
             <h1>All sabhas</h1>
@@ -153,7 +165,7 @@ $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
                     indexLabelFontSize: 16,
                     indexLabel: "{label} - #percent%",
                     yValueFormatString: "#0.#",
-                    dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                    dataPoints: <?php echo json_encode($datapoints, JSON_NUMERIC_CHECK); ?>
                 }]
             });
             chart.render();

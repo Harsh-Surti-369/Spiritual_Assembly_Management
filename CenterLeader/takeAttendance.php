@@ -9,13 +9,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sabha_summary = $_POST['sabhaSummary'];
 
         foreach ($_POST as $key => $value) {
-            // Check if the key represents a devotee's attendance
             if (strpos($key, 'devotee_') !== false) {
-                // Extract the devotee ID from the key
                 $devotee_id = substr($key, strlen('devotee_'));
 
                 // Determine the attendance status
-                $attendance_status = ($value == 'present') ? 1 : 0; // Assuming 1 represents present and 0 represents absent
+                $attendance_status = ($value == 'present') ? 1 : 0;
 
                 // Check if attendance record already exists for the sabha and devotee
                 $sql_check_attendance = "SELECT * FROM tbl_attendance WHERE sabha_id = '$sabha_id' AND devotee_id = '$devotee_id'";

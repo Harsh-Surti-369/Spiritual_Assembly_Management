@@ -1,5 +1,5 @@
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="height: 110px;position: fixed;top: 0;left: 0;right: 0;z-index: 1000;">
+<header class="mb-5">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php" aria-label="Home">
                 <img src="../images/Logo.png" class="logo" alt="Logo" style="width:9rem; height:auto;">

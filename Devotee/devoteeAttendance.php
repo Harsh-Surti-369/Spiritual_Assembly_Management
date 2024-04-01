@@ -149,7 +149,9 @@ $dataPoints = array(
               </div>";
             }
         } else {
-            echo "<p>No sabhas found for the selected period.</p>";
+            echo "<div class='alert alert-warning' role='alert'>
+            No sabhas found for the selected period.
+          </div>";
         }
         ?>
 
