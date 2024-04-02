@@ -2,7 +2,6 @@
 session_start();
 include('../php/dbConnect.php');
 
-// Get the selected period from the URL
 $period = isset($_GET['period']) ? $_GET['period'] : 'lifetime';
 $devotee_id = $_GET['devotee_id'];
 
@@ -10,8 +9,6 @@ $totalSabhas = 0;
 $presentCount = 0;
 $attendancePercentage = 0;
 
-
-// Get the start and end dates for the selected period
 switch ($period) {
     case 'last_month':
         $currentDate = new DateTime();
@@ -25,7 +22,6 @@ switch ($period) {
         $endDate = date('Y-m-d');
         break;
     default:
-        // Fetch the joining date of the devotee from the database
         $joinDateQuery = "SELECT joining_date FROM tbl_devotee WHERE devotee_id = ?";
         $joinDateStmt = $conn->prepare($joinDateQuery);
         $joinDateStmt->bind_param("i", $devotee_id);
@@ -35,14 +31,12 @@ switch ($period) {
             $startDate = $joinDateRow['joining_date'];
             $endDate = date('Y-m-d'); // Today's date
         } else {
-            // Default to empty string if joining date not found
             $startDate = "";
             $endDate = date('Y-m-d'); // Today's date
         }
         break;
 }
 
-// Fetch sabha details and attendance status for the selected period
 $sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, COALESCE(a.attendance_status, 'Absent') AS attendance_status, a.description
                       FROM tbl_sabha s
                       LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
@@ -54,13 +48,19 @@ $sabhaDetailsStmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $star
 $sabhaDetailsStmt->execute();
 $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
 
-
 $datapoints = array(
-    array("label" => "Present", "y" => $attendancePercentage),
-    array("label" => "Absent", "y" => 100 - $attendancePercentage)
+    array("label" => "Present", "y" => 0),
+    array("label" => "Absent", "y" => 100)
 );
-?>
 
+if ($totalSabhas > 0) {
+    $datapoints = array(
+        array("label" => "Present", "y" => $attendancePercentage),
+        array("label" => "Absent", "y" => 100 - $attendancePercentage)
+    );
+}
+?>
+<!-- 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -74,63 +74,64 @@ $datapoints = array(
 </head>
 
 <body>
-    <?php include('header.php');
-    ?>
+    <header style="margin-bottom: 150px;">
+        <?php include('header.php'); ?>
+    </header>
     <div id="attendanceComponent">
         <h1>Devotee Attendance</h1>
-        <!-- Toast for displaying messages -->
         <div class="toast" id="messageToast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <strong class="me-auto">Message</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body" id="toastBody">
-                <!-- Message content will be displayed here -->
             </div>
         </div>
-        <!-- End of Toast -->
         <div id="chartContainer"></div>
         <form id="attendanceForm" method="get" action="attendanceDashboard.php">
-            <input type="hidden" name="devotee_id" value="<?php echo $devotee_id; ?>">
+            <input type="hidden" name="devotee_id" value="<?php // echo $devotee_id; 
+                                                            ?>">
             <div class="form-group">
                 <label for="timePeriod">Select Time Period:</label>
                 <select class="form-control" id="timePeriod" name="period" onchange="this.form.submit();">
-                    <option value="last_month" <?php echo ($period == 'last_month') ? 'selected' : ''; ?>>Last Month</option>
-                    <option value="last_year" <?php echo ($period == 'last_year') ? 'selected' : ''; ?>>Last Year</option>
-                    <option value="lifetime" <?php echo ($period == 'lifetime') ? 'selected' : ''; ?>>Lifetime</option>
+                    <option value="last_month" <?php // echo ($period == 'last_month') ? 'selected' : ''; 
+                                                ?>>Last Month</option>
+                    <option value="last_year" <?php //  echo ($period == 'last_year') ? 'selected' : ''; 
+                                                ?>>Last Year</option>
+                    <option value="lifetime" <?php // echo ($period == 'lifetime') ? 'selected' : ''; 
+                                                ?>>Lifetime</option>
                 </select>
             </div>
         </form>
 
         <div id="sabhaDetailsComponent">
-            <!-- Right component with sabha details -->
             <h1>All sabhas</h1>
             <?php
-            if ($sabhaDetailsResult->num_rows > 0) {
-                $totalSabhas = $sabhaDetailsResult->num_rows;
-                echo "<p><strong>Total Sabhas: $totalSabhas</strong></p>";
 
-                while ($row = $sabhaDetailsResult->fetch_assoc()) {
-                    $sabhaTitle = $row['title'];
-                    $sabhaDate = date('Y-m-d', strtotime($row['date']));
-                    $sabhaSpeaker = $row['speaker'];
-                    $attendanceStatus = $row['attendance_status'];
-                    $description = $row['description'];
+            // if ($sabhaDetailsResult->num_rows > 0) {
+            //     $totalSabhas = $sabhaDetailsResult->num_rows;
+            //     echo "<p><strong>Total Sabhas: $totalSabhas</strong></p>";
 
-                    echo "<div class='sabha-details'>
-                            <h3 class='title'>$sabhaTitle</h3>
-                            <p><strong>Date:</strong> $sabhaDate</p>
-                            <p><strong>Speaker:</strong> $sabhaSpeaker</p>
-                            <p class='status'><strong>Attendance Status:</strong> $attendanceStatus</p>
-                            <p><strong>Description:</strong> $description</p>
-                          </div>";
-                }
-            } else {
-                // Display a message if no sabhas found
-                echo "<div class='alert alert-warning' role='alert'>
-                        No sabhas found for the selected period.
-                      </div>";
-            }
+            //     while ($row = $sabhaDetailsResult->fetch_assoc()) {
+            //         $sabhaTitle = $row['title'];
+            //         $sabhaDate = date('Y-m-d', strtotime($row['date']));
+            //         $sabhaSpeaker = $row['speaker'];
+            //         $attendanceStatus = $row['attendance_status'];
+            //         $description = $row['description'];
+
+            //         echo "<div class='sabha-details'>
+            //                 <h3 class='title'>$sabhaTitle</h3>
+            //                 <p><strong>Date:</strong> $sabhaDate</p>
+            //                 <p><strong>Speaker:</strong> $sabhaSpeaker</p>
+            //                 <p class='status'><strong>Attendance Status:</strong> $attendanceStatus</p>
+            //                 <p><strong>Description:</strong> $description</p>
+            //               </div>";
+            //     }
+            // } else {
+            //     echo "<div class='alert alert-warning' role='alert'>
+            //             No sabhas found for the selected period.
+            //           </div>";
+            // }
             ?>
         </div>
     </div>
@@ -140,7 +141,6 @@ $datapoints = array(
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        // Function to display toast message
         function showToast(message) {
             var toastBody = document.getElementById('toastBody');
             toastBody.innerText = message;
@@ -165,10 +165,136 @@ $datapoints = array(
                     indexLabelFontSize: 16,
                     indexLabel: "{label} - #percent%",
                     yValueFormatString: "#0.#",
-                    dataPoints: <?php echo json_encode($datapoints, JSON_NUMERIC_CHECK); ?>
+                    dataPoints: <?php // echo json_encode($datapoints, JSON_NUMERIC_CHECK); 
+                                ?>
                 }]
             });
             chart.render();
+        });
+    </script>
+</body>
+
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devotee Attendance</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom styles */
+        body {
+            background-color: #EFECEC;
+            padding: 20px;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sabha List Component -->
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Sabha List</h2>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Sabha 1
+                                <span class="badge bg-success">Present</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Sabha 2
+                                <span class="badge bg-danger">Absent</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Sabha 3
+                                <span class="badge bg-success">Present</span>
+                            </li>
+                            <!-- Add more sabhas here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bar Chart Component -->
+        <div class="row chart-container">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Bar Chart: Number of Sabhas Attended per Month</h2>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie Chart Component -->
+        <div class="row chart-container">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Pie Chart: Attendance Percentage</h2>
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fake data for bar chart (Number of Sabhas Attended per Month)
+        const barChartData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [{
+                label: 'Number of Sabhas Attended',
+                data: [5, 8, 6, 9, 10, 7, 8, 9, 10, 11, 7, 8],
+                backgroundColor: 'rgba(252, 103, 54, 0.5)',
+                borderColor: 'rgba(252, 103, 54, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        // Fake data for pie chart (Attendance Percentage)
+        const pieChartData = {
+            labels: ['Present', 'Absent'],
+            datasets: [{
+                data: [80, 20],
+                backgroundColor: ['rgba(12, 45, 87, 0.5)', 'rgba(255, 176, 176, 0.5)'],
+                borderColor: ['rgba(12, 45, 87, 1)', 'rgba(255, 176, 176, 1)'],
+                borderWidth: 1
+            }]
+        };
+
+        // Render bar chart
+        const barChartCanvas = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(barChartCanvas, {
+            type: 'bar',
+            data: barChartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Render pie chart
+        const pieChartCanvas = document.getElementById('pieChart').getContext('2d');
+        const pieChart = new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: pieChartData
         });
     </script>
 </body>

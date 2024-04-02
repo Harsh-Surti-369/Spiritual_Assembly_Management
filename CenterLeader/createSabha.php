@@ -14,12 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $date = $_POST['date'];
         $center_id = $_SESSION['center_id'];
 
-        // Get the current date
         $currentDate = date('Y-m-d');
 
-        // Check if the selected date is before today
         if ($date < $currentDate) {
-            // Display an error message or handle the error as needed
             echo '<div class="toast gb" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <strong class="me-auto">Invalid Date</strong>
@@ -27,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="toast-body">Please select a date that is today or in the future.</div>
           </div>';
-            exit(); // Stop further execution
+            exit(); 
         }
 
         $sql_insert_sabha = "INSERT INTO tbl_sabha (title, description, speaker, sabha_type, timing_from, timing_to, location, date, center_id)
@@ -37,7 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: sabhalist.php");
             exit();
         } else {
-            // Error message as a toast notification
             echo '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="toast-header">
                         <strong class="me-auto">Error</strong>
@@ -47,7 +43,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   </div>';
         }
     } else {
-        // All required fields are not provided message as a toast notification
         echo '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header">
                     <strong class="me-auto">Incomplete Form</strong>
@@ -57,7 +52,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               </div>';
     }
 } else {
-    // Invalid request method message as a toast notification
     echo '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <strong class="me-auto">Invalid Request</strong>

@@ -1,4 +1,3 @@
-<header class="mb-5">
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php" aria-label="Home">
@@ -43,4 +42,3 @@
             </div>
         </div>
     </nav>
-</header>
