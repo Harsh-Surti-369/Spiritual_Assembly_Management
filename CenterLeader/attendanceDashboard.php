@@ -1,64 +1,64 @@
 <?php
-session_start();
-include('../php/dbConnect.php');
+// session_start();
+// include('../php/dbConnect.php');
 
-$period = isset($_GET['period']) ? $_GET['period'] : 'lifetime';
-$devotee_id = $_GET['devotee_id'];
+// $period = isset($_GET['period']) ? $_GET['period'] : 'lifetime';
+// $devotee_id = $_GET['devotee_id'];
 
-$totalSabhas = 0;
-$presentCount = 0;
-$attendancePercentage = 0;
+// $totalSabhas = 0;
+// $presentCount = 0;
+// $attendancePercentage = 0;
 
-switch ($period) {
-    case 'last_month':
-        $currentDate = new DateTime();
-        $currentDate->modify('last month');
-        $lastMonthSameDate = $currentDate->format('Y-m-d');
-        $startDate = $lastMonthSameDate;
-        $endDate = date('Y-m-d'); // Today's date
-        break;
-    case 'last_year':
-        $startDate = date('Y-m-d', strtotime('-1 year'));
-        $endDate = date('Y-m-d');
-        break;
-    default:
-        $joinDateQuery = "SELECT joining_date FROM tbl_devotee WHERE devotee_id = ?";
-        $joinDateStmt = $conn->prepare($joinDateQuery);
-        $joinDateStmt->bind_param("i", $devotee_id);
-        $joinDateStmt->execute();
-        $joinDateResult = $joinDateStmt->get_result();
-        if ($joinDateRow = $joinDateResult->fetch_assoc()) {
-            $startDate = $joinDateRow['joining_date'];
-            $endDate = date('Y-m-d'); // Today's date
-        } else {
-            $startDate = "";
-            $endDate = date('Y-m-d'); // Today's date
-        }
-        break;
-}
+// switch ($period) {
+//     case 'last_month':
+//         $currentDate = new DateTime();
+//         $currentDate->modify('last month');
+//         $lastMonthSameDate = $currentDate->format('Y-m-d');
+//         $startDate = $lastMonthSameDate;
+//         $endDate = date('Y-m-d'); // Today's date
+//         break;
+//     case 'last_year':
+//         $startDate = date('Y-m-d', strtotime('-1 year'));
+//         $endDate = date('Y-m-d');
+//         break;
+//     default:
+//         $joinDateQuery = "SELECT joining_date FROM tbl_devotee WHERE devotee_id = ?";
+//         $joinDateStmt = $conn->prepare($joinDateQuery);
+//         $joinDateStmt->bind_param("i", $devotee_id);
+//         $joinDateStmt->execute();
+//         $joinDateResult = $joinDateStmt->get_result();
+//         if ($joinDateRow = $joinDateResult->fetch_assoc()) {
+//             $startDate = $joinDateRow['joining_date'];
+//             $endDate = date('Y-m-d'); // Today's date
+//         } else {
+//             $startDate = "";
+//             $endDate = date('Y-m-d'); // Today's date
+//         }
+//         break;
+// }
 
-$sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, COALESCE(a.attendance_status, 'Absent') AS attendance_status, a.description
-                      FROM tbl_sabha s
-                      LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
-                      WHERE s.center_id = ? AND s.date BETWEEN ? AND ?
-                      ORDER BY s.date DESC";
+// $sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, COALESCE(a.attendance_status, 'Absent') AS attendance_status, a.description
+//                       FROM tbl_sabha s
+//                       LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
+//                       WHERE s.center_id = ? AND s.date BETWEEN ? AND ?
+//                       ORDER BY s.date DESC";
 
-$sabhaDetailsStmt = $conn->prepare($sabhaDetailsQuery);
-$sabhaDetailsStmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $startDate, $endDate);
-$sabhaDetailsStmt->execute();
-$sabhaDetailsResult = $sabhaDetailsStmt->get_result();
+// $sabhaDetailsStmt = $conn->prepare($sabhaDetailsQuery);
+// $sabhaDetailsStmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $startDate, $endDate);
+// $sabhaDetailsStmt->execute();
+// $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
 
-$datapoints = array(
-    array("label" => "Present", "y" => 0),
-    array("label" => "Absent", "y" => 100)
-);
+// $datapoints = array(
+//     array("label" => "Present", "y" => 0),
+//     array("label" => "Absent", "y" => 100)
+// );
 
-if ($totalSabhas > 0) {
-    $datapoints = array(
-        array("label" => "Present", "y" => $attendancePercentage),
-        array("label" => "Absent", "y" => 100 - $attendancePercentage)
-    );
-}
+// if ($totalSabhas > 0) {
+//     $datapoints = array(
+//         array("label" => "Present", "y" => $attendancePercentage),
+//         array("label" => "Absent", "y" => 100 - $attendancePercentage)
+//     );
+// }
 ?>
 <!-- 
 <!DOCTYPE html>
@@ -175,128 +175,3 @@ if ($totalSabhas > 0) {
 </body>
 
 </html> -->
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devotee Attendance</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* Custom styles */
-        body {
-            background-color: #EFECEC;
-            padding: 20px;
-        }
-
-        .chart-container {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <!-- Sabha List Component -->
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Sabha List</h2>
-                        <ul class="list-group">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Sabha 1
-                                <span class="badge bg-success">Present</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Sabha 2
-                                <span class="badge bg-danger">Absent</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Sabha 3
-                                <span class="badge bg-success">Present</span>
-                            </li>
-                            <!-- Add more sabhas here -->
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bar Chart Component -->
-        <div class="row chart-container">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Bar Chart: Number of Sabhas Attended per Month</h2>
-                        <canvas id="barChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pie Chart Component -->
-        <div class="row chart-container">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Pie Chart: Attendance Percentage</h2>
-                        <canvas id="pieChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Fake data for bar chart (Number of Sabhas Attended per Month)
-        const barChartData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            datasets: [{
-                label: 'Number of Sabhas Attended',
-                data: [5, 8, 6, 9, 10, 7, 8, 9, 10, 11, 7, 8],
-                backgroundColor: 'rgba(252, 103, 54, 0.5)',
-                borderColor: 'rgba(252, 103, 54, 1)',
-                borderWidth: 1
-            }]
-        };
-
-        // Fake data for pie chart (Attendance Percentage)
-        const pieChartData = {
-            labels: ['Present', 'Absent'],
-            datasets: [{
-                data: [80, 20],
-                backgroundColor: ['rgba(12, 45, 87, 0.5)', 'rgba(255, 176, 176, 0.5)'],
-                borderColor: ['rgba(12, 45, 87, 1)', 'rgba(255, 176, 176, 1)'],
-                borderWidth: 1
-            }]
-        };
-
-        // Render bar chart
-        const barChartCanvas = document.getElementById('barChart').getContext('2d');
-        const barChart = new Chart(barChartCanvas, {
-            type: 'bar',
-            data: barChartData,
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Render pie chart
-        const pieChartCanvas = document.getElementById('pieChart').getContext('2d');
-        const pieChart = new Chart(pieChartCanvas, {
-            type: 'pie',
-            data: pieChartData
-        });
-    </script>
-</body>
-
-</html>

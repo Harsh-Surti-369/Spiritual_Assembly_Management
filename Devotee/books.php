@@ -63,95 +63,223 @@ if ($row_center = $result_center->fetch_assoc()) {
 //     addToFavorites($id, $devotee_id, $conn);
 // }
 ?>
+Sure, here's the updated code with the color palette applied:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/devotee/books.css">
     <title>Book List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #0C2D57;
+            --secondary-color: #FC6736;
+            --tertiary-color: #FFB0B0;
+            --light-color: #EFECEC;
+        }
 
+        body {
+            background-image: url("/Spiritual_Assembly_Management-main/Devotee/images/0fd3416c.jpeg");
+        }
+
+        .bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color) !important;
+            border-color: var(--secondary-color) !important;
+            color: #fff !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #d65628 !important;
+            border-color: #d65628 !important;
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color) !important;
+            color: #fff !important;
+        }
+
+        .text-secondary {
+            color: var(--tertiary-color) !important;
+        }
+
+        .bg-light {
+            background-color: var(--light-color) !important;
+        }
+
+        .pagination .page-link {
+            color: var(--primary-color) !important;
+            background-color: var(--light-color) !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .pagination .page-link:hover {
+            background-color: var(--primary-color) !important;
+            color: #fff !important;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: var(--secondary-color) !important;
+            border-color: var(--secondary-color) !important;
+            color: #fff !important;
+        }
+    </style>
 </head>
 
 <body>
-
-    <header>
-        <h1>Book List</h1>
-    </header>
-
-    <div class="container">
-        <form action="" method="get">
-            <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Search by title, author" name="search">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Book List</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
             </div>
-            <!-- Filter options -->
-            <div class="filter-options">
-                <select class="filter-select" id="genre" name="date">
-                    <option value="">All Dates</option>
-                    <option value="asc">Oldest Fisrt</option>
-                    <option value="desc">Newest First</option>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <select class="form-select" id="genre">
+                    <option value="">All Genres</option>
+                    <option value="fiction">Fiction</option>
+                    <option value="non-fiction">Non-Fiction</option>
                 </select>
-
-                <button type="submit" class="search-button">Apply Filters</button>
-        </form>
-    </div>
-
-    <div class="book-grid">
-        <?php
-        while ($row = $result->fetch_assoc()) {
-            $book_id = $row['book_id'];
-            $title = $row['title'];
-            $description = $row['description'];
-            $file_path = $row['file_path'];
-            $author = $row['author'];
-
-        ?>
-            <div class="book-card">
-                <div class="book-info">
-                    <h2 class="book-title"><?php echo $title; ?></h2>
-                    <p class="book-author"><?php echo $author; ?></p>
-                    <p class="book-description"><?php echo $description; ?></p>
-                    <div class="button-group">
-                        <a href="<?php echo $file_path ?>" target="_blank" class="pdf-link">Open PDF</a>
-                        <!-- <button class="wishlist-button btn btn-sm mx-2 my-3" onclick="addToFavourites(<?php echo $id ?>)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmarks wishlist-icon" viewBox="0 0 16 16">
-                                <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z" />
-                                <path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1" />
-                            </svg>
-                            Wishlist
-                        </button> -->
-                    </div>
-                    <a onclick="downloadAudio('<?php echo $file_path; ?>')" class="download-link btn btn-sm mx-2 my-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download download-icon" viewBox="0 0 16 16">
-                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
-                        </svg>
-                        Download PDF
-                    </a>
-
-                </div>
             </div>
-        <?php
-        }
-        ?>
-    </div>
-    </div>
+            <div class="col-md-4">
+                <select class="form-select" id="sort">
+                    <option value="title">Sort by Title</option>
+                    <option value="author">Sort by Author</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="author">
+                    <option value="">All Authors</option>
+                    <option value="john-doe">John Doe</option>
+                    <option value="jane-doe">Jane Doe</option>
+                </select>
+            </div>
+        </div>
 
-    <footer>
-        <p>&copy; 2024 Book List Website</p>
-    </footer>
-    <script>
-        function downloadAudio(audioUrl) {
-            var a = document.createElement('a');
-            a.href = audioUrl;
-            a.download = audioUrl.split('/').pop();
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-    </script>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <img src="book-cover.jpg" class="card-img-top" alt="Book Cover">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Book Title</h5>
+                        <p class="card-text text-secondary">Author Name</p>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida euismod felis, nec hendrerit urna consequat ut.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-outline-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmarks me-1" viewBox="0 0 16 16">
+                                    <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4z"></path>
+                                    <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.854.354l-2.853-1.855zM2 3a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.342.474l-2 1.27A.5.5 0 0 1 9.154 16H2a2 2 0 0 1-2-2V3z"></path>
+                                </svg>
+                                Wishlist
+                            </button>
+                            <a href="#" class="text-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"></path>
+                                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1
+                    Download PDF
+                </a>
+            </div>
+        </div>
+        <!-- Pagination controls -->
+        <div class=" pagination">
+                                        <button class="page-link" id="prev-page"> Previous</button>
+                                        <span id="current-page">Page 1</span>
+                                        <button class="page-link" id="next-page">Next</button>
+                        </div>
+
+                    </div>
+
+                    <footer>
+                        <p>&copy; 2024 Book List Website</p>
+                    </footer>
+                    <script>
+                        function applyFilters() {
+                            // Get selected filter values
+                            var genre = document.getElementById('genre').value;
+                            var author = document.getElementById('author').value;
+                            // Apply filters to book cards
+                            var bookCards = document.querySelectorAll('.book-card');
+                            bookCards.forEach(function(card) {
+                                var cardGenre = card.getAttribute('data-genre');
+                                var cardAuthor = card.getAttribute('data-author');
+                                if ((genre === '' || cardGenre === genre) && (author === '' || cardAuthor === author)) {
+                                    card.style.display = 'block';
+                                } else {
+                                    card.style.display = 'none';
+                                }
+                            });
+                        }
+
+
+                        var currentPage = 1;
+                        var booksPerPage = 6; // Adjust the number of books per page as needed
+                        var totalBooks = 36; // Total number of books (for example)
+
+                        // Function to display books based on pagination
+                        function displayBooks(page) {
+                            var bookCards = document.querySelectorAll('.book-card');
+                            var startIndex = (page - 1) * booksPerPage;
+                            var endIndex = startIndex + booksPerPage;
+                            for (var i = 0; i < bookCards.length; i++) {
+                                if (i >= startIndex && i < endIndex) {
+                                    bookCards[i].style.display = 'block';
+                                } else {
+                                    bookCards[i].style.display = 'none';
+                                }
+                            }
+                            document.getElementById('current-page').textContent = 'Page ' + page;
+                        }
+
+                        // Initial display of books on page load
+                        displayBooks(currentPage);
+
+                        // Pagination event listeners
+                        document.getElementById('prev-page').addEventListener('click', function() {
+                            if (currentPage > 1) {
+                                currentPage--;
+                                displayBooks(currentPage);
+                            }
+                        });
+
+                        document.getElementById('next-page').addEventListener('click', function() {
+                            var totalPages = Math.ceil(totalBooks / booksPerPage);
+                            if (currentPage < totalPages) {
+                                currentPage++;
+                                displayBooks(currentPage);
+                            }
+                        });
+                    </script>
 
 </body>
 
