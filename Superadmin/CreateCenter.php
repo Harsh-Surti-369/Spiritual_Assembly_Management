@@ -1,5 +1,6 @@
 <?php session_start();
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -46,47 +47,50 @@
             border-color: #EFECEC !important;
             color: #0C2D57 !important;
         }
+
+        .gradient-form {
+            background: linear-gradient(to right, #EFECEC, #FC6736, #FFB0B0, #0C2D57);
+        }
+
+        .brand {
+            color: #0C2D57;
+            font-weight: bold;
+        }
+
+        .logo {
+            width: 185px;
+        }
+
+        .card {
+            border-radius: 25px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .submit {
+            background-color: #0C2D57;
+            color: #EFECEC;
+            border: none;
+        }
+
+        .submit:hover {
+            background-color: #0C2D57;
+            opacity: 0.8;
+        }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Admin Dashboard</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="centers.php">Centers</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="devotees.php">Devotees</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="content.php">Content</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Reports</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="profile.php">Profile</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <section class="d-flex my-2 h-80 justify-content-center align-items-center gradient-form">
+    <?php include('header.php'); ?>
+    <section class="d-flex h-40 justify-content-center align-items-center gradient-form">
         <div class="container py-1">
             <div class="col-xl-6 offset-xl-3">
                 <div class="card rounded-3 text-black shadow-lg d3">
-                    <div class="card-body p-md-5 mx-md-4">
+                    <div class="card-body p-md-3 mx-md-2">
                         <div class="text-center">
-                            <img src="../images/Logo.png" style="width: 185px;" alt="logo" class="my-1 rounded-circle logo">
+                            <img src="../images/Logo.png" alt="logo" class="my-1 rounded-circle logo">
                             <h3 class="mt-1 mb-5 pb-1 brand">Prabodham Weekly Assembly</h3>
                         </div>
                         <form action="createCenter.php" method="post" id="createCenter" onsubmit="return validateForm()">
@@ -97,9 +101,9 @@
                             </div>
 
                             <div class="form-group mb-4">
-                                <input name="address" type="address" id="address" class="form-control" placeholder="address for center" required>
-                                <label class="form-label" for="name">Address for Center</label>
-                                <span id="name" class="text-danger"></span>
+                                <input name="address" type="address" id="address" class="form-control" placeholder="Address for Center" required>
+                                <label class="form-label" for="address">Address for Center</label>
+                                <span id="address" class="text-danger"></span>
                             </div>
                             <div class="form-group mb-4">
                                 <input name="email" type="email" id="email" class="form-control" placeholder="Email" required>
@@ -121,69 +125,7 @@
         </div>
     </section>
 
-    <!-- Success Toast -->
-    <div class="toast toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
-        <div class="toast-header">
-            <strong class="me-auto">Success</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            Center created successfully. Center leader login credentials have been emailed to <?php echo $email; ?>
-        </div>
-    </div>
-
-    <!-- Failure Toasts -->
-    <div class="toast toast-failure" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
-        <div class="toast-header">
-            <strong class="me-auto">Error</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            Failed to send email.
-        </div>
-    </div>
-
-    <div class="toast toast-error-update" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
-        <div class="toast-header">
-            <strong class="me-auto">Error</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            Error updating center with leader ID.
-        </div>
-    </div>
-
-    <div class="toast toast-error-leader" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
-        <div class="toast-header">
-            <strong class="me-auto">Error</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            Error creating center leader.
-        </div>
-    </div>
-
-    <div class="toast toast-error-center" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
-        <div class="toast-header">
-            <strong class="me-auto">Error</strong>
-            <button type="button" class="btn-close" data-bs dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            Error creating center.
-        </div>
-    </div>
-
-    <div class="toast toast-error-fields" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
-        <div class="toast-header">
-            <strong class="me-auto">Error</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            All required fields are not provided.
-        </div>
-    </div>
-
-
+    <!-- JavaScript Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 

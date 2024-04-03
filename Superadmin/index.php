@@ -49,6 +49,7 @@ if ($result->num_rows > 0) {
 } else {
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -99,42 +100,12 @@ if ($result->num_rows > 0) {
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Admin Dashboard</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="centers.php">Centers</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="devotees.php">Devotees</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="content.php">Content</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Reports</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="profile.php">Profile</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <?php include('header.php'); ?>
     <div class="container-fluid mt-4">
         <div class="row">
-            <!-- Total Centers and Total Devotees cards here -->
             <div class="row m-2">
                 <div class="col-md-3 mb-4">
-                    <div class="card">
+                    <div class="card custom-box">
                         <div class="card-body">
                             <h5 class="card-title">Total Centers</h5>
                             <p class="card-text display-4"><?php echo $centerCount; ?></p>
@@ -143,7 +114,7 @@ if ($result->num_rows > 0) {
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
-                    <div class="card">
+                    <div class="card custom-box">
                         <div class="card-body">
                             <h5 class="card-title">Total Devotees</h5>
                             <p class="card-text display-4"><?php echo $devoteeCount; ?></p>
@@ -157,7 +128,8 @@ if ($result->num_rows > 0) {
 
     <div class="mb-3" id="chartContainer" style="height: 370px; width: 100%;"></div>
 
-<!-- <div class="row">      <div class="col-md-12 mb-4">
+    <div class="row">
+        <div class="col-md-12 mb-4">
             <div class="card">
                 <div class="card-header bg-secondary">
                     <h5 class="card-title text-primary">Center Attendance</h5>
@@ -172,24 +144,63 @@ if ($result->num_rows > 0) {
                                 <th class="text-primary">Expected Attendance</th>
                                 <th class="text-primary">Attendance %</th>
                                 <th class="text-primary">% Change</th>
-                                <th class="text-primary">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Center A</td>
-                                <td>City X</td>
-                                <td>500</td>
-                                <td>600</td>
-                                <td>83.3%</td>
-                                <td class="text-success"><i class="bi bi-arrow-up"></i> 12%</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-primary">View Details</a>
-                                    <a href="#" class="btn btn-sm btn-secondary">Edit</a>
-                                </td>
-                            </tr>
-                            <!-- Add more rows as needed -->
+                            <?php
+                            $centerAttendanceQuery = "SELECT
+    c.center_name,c.location,
+    COUNT(a.attendance_id) AS total_attendees,
+    COUNT(s.sabha_id) AS expected_attendance,
+    ROUND((COUNT(a.attendance_id) / COUNT(s.sabha_id)) * 100, 2) AS attendance_percentage,
+    CONCAT(ROUND((COUNT(a.attendance_id) / COUNT(s.sabha_id)) * 100, 2), '%') AS attendance_percentage_formatted
+        FROM
+            tbl_center c
+        LEFT JOIN
+            tbl_sabha s ON c.center_id = s.center_id
+        LEFT JOIN
+            tbl_attendance a ON s.sabha_id = a.sabha_id
+        GROUP BY
+            c.center_id;
+    ";
+
+                            $centerAttendanceResult = $conn->query($centerAttendanceQuery);
+
+                            if ($centerAttendanceResult->num_rows > 0) {
+                                // Loop through each center's attendance data
+                                while ($row = $centerAttendanceResult->fetch_assoc()) {
+                                    $centerName = $row['center_name'];
+                                    $location = $row['location'];
+                                    $totalAttendees = $row['total_attendees'];
+                                    $expectedAttendance = $row['expected_attendance'];
+                                    $attendancePercentage = $row['attendance_percentage_formatted'];
+
+                                    // Calculate percentage change (assuming we have previous data to compare)
+                                    $previousAttendancePercentage = 80; // Example previous attendance percentage
+                                    $attendancePercentageValue = floatval(str_replace('%', '', $attendancePercentage));
+                                    $percentageChange = $attendancePercentageValue - $previousAttendancePercentage;
+                                    $percentageChangeClass = $percentageChange >= 0 ? 'text-success' : 'text-danger';
+                            ?>
+
+                                    <tr>
+                                        <td><?php echo $centerName; ?></td>
+                                        <td><?php echo $location; ?></td>
+                                        <td><?php echo $totalAttendees; ?></td>
+                                        <td><?php echo $expectedAttendance; ?></td>
+                                        <td><?php echo $attendancePercentage; ?></td>
+                                        <td class="<?php echo $percentageChangeClass; ?>"><i class="bi bi-arrow-<?php echo $percentageChange >= 0 ? 'up' : 'down'; ?>"></i> <?php echo abs($percentageChange); ?>%</td>
+                                    </tr>
+
+                            <?php
+                                }
+                            } else {
+                                // No data found
+                                echo '<tr><td colspan="7">No attendance data available</td></tr>';
+                            }
+                            ?>
+
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -206,7 +217,6 @@ if ($result->num_rows > 0) {
                             <option value="">Select Devotee</option>
                             <option value="devotee1">Alice Johnson</option>
                             <option value="devotee2">Bob Williams</option>
-                            <!-- Add more options as needed -->
                         </select>
                     </div>
                 </div>
