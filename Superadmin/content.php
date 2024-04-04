@@ -2,77 +2,19 @@
 session_start();
 include('../php/dbConnect.php');
 
-function formatFileSize($size)
-{
-    $units = array('B', 'KB', 'MB', 'GB', 'TB');
-    $i = 0;
-    while ($size >= 1024 && $i < count($units) - 1) {
-        $size /= 1024;
-        $i++;
-    }
-    return round($size, 2) . ' ' . $units[$i];
-}
-
-function fetchBhajanAudioData()
-{
-    global $conn;
-
-    $bhajanAudioData = array();
-
-    // Query to fetch bhajan audio data
-    $query = "SELECT b.id, b.title, b.speaker, c.center_name, b.file_path
-              FROM tbl_content b
-              INNER JOIN tbl_center c ON b.center_id = c.center_id
-              WHERE b.category = 'Bhajan' AND SUBSTRING(b.file_path, -3) = 'mp3'";
-
-    $result = mysqli_query($conn, $query);
-
-    // Check if query executed successfully
-    if ($result) {
-        // Fetch data from the result set
-        while ($row = mysqli_fetch_assoc($result)) {
-            // Calculate file size
-            $fileSize = filesize($row['file_path']);
-            // Convert file size to human-readable format
-            $fileSizeFormatted = formatFileSize($fileSize);
-
-            // Add data to the array
-            $bhajanAudioData[] = array(
-                'id' => $row['id'],
-                'title' => $row['title'],
-                'singer' => $row['speaker'],
-                'center' => $row['center_name'],
-                'audio_url' => $row['file_path'],
-                'file_size' => $fileSizeFormatted
-            );
-        }
-    } else {
-        // Handle query error
-        echo "Error fetching bhajan audio data: " . mysqli_error($conn);
-    }
-
-    return $bhajanAudioData;
-}
-
-function fetchContentData($category, $extension = null)
+function fetchContentData($category, $extension)
 {
     global $conn;
     $contentData = array();
 
     // Query to fetch content data
-    $query = "SELECT b.id, b.title, b.speaker, c.center_name, b.file_path, b.category, b.created_at
-              FROM tbl_content b
-              INNER JOIN tbl_center c ON b.center_id = c.center_id
-              WHERE b.category = ?";
+    $query = "SELECT c.id, c.title, c.speaker, c.upload_date, ce.center_name, c.file_path
+              FROM tbl_content c
+              INNER JOIN tbl_center ce ON c.center_id = ce.center_id
+              WHERE c.category = ? AND SUBSTRING(c.file_path, -3) = ?";
 
-    if ($extension !== null) {
-        $query .= " AND SUBSTRING(b.file_path, -3) = ?";
-        $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, "ss", $category, $extension);
-    } else {
-        $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, "s", $category);
-    }
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "ss", $category, $extension);
 
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -81,20 +23,14 @@ function fetchContentData($category, $extension = null)
     if ($result) {
         // Fetch data from the result set
         while ($row = mysqli_fetch_assoc($result)) {
-            // Calculate file size
-            $fileSize = filesize($row['file_path']);
-            // Convert file size to human-readable format
-            $fileSizeFormatted = formatFileSize($fileSize);
             // Add data to the array
             $contentData[] = array(
                 'id' => $row['id'],
                 'title' => $row['title'],
                 'speaker' => $row['speaker'],
-                'center' => $row['center_name'],
-                'file_path' => $row['file_path'],
-                'file_size' => $fileSizeFormatted,
-                'category' => $row['category'],
-                'date' => $row['created_at']
+                'upload_date' => $row['upload_date'],
+                'center_name' => $row['center_name'],
+                'file_path' => $row['file_path']
             );
         }
     } else {
@@ -105,262 +41,330 @@ function fetchContentData($category, $extension = null)
     return $contentData;
 }
 
-$bhajanAudioData = fetchBhajanAudioData();
-?>
+// Fetch Bhajan Audio Data
+$bhajanAudioData = fetchContentData('Bhajan', 'mp3');
 
+// Fetch Pravachan Audio Data
+$pravachanAudioData = fetchContentData('Pravachan', 'mp3');
+
+// Fetch Bhajan Video Data
+$bhajanVideoData = fetchContentData('Bhajan', 'mp4');
+
+// Fetch Pravachan Video Data
+$pravachanVideoData = fetchContentData('Pravachan', 'mp4');
+
+// Function to delete content
+function deleteContent($contentId)
+{
+    global $conn;
+    // Prepare and execute the deletion query
+    $query = "DELETE FROM tbl_content WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $contentId);
+    $success = mysqli_stmt_execute($stmt);
+    // Check if deletion was successful
+    if ($success) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Check if the delete request is sent
+if (isset($_POST['delete_id'])) {
+    $contentId = $_POST['delete_id'];
+    $deletionSuccess = deleteContent($contentId);
+    // Return JSON response for AJAX handling
+    echo json_encode(array('success' => $deletionSuccess));
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <title>Content Management</title>
+    <link rel="shortcut icon" href="../images/Logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
-        .bg-primary {
-            background-color: #0C2D57 !important;
+        body {
+            background-color: #EFECEC;
+            font-family: Arial, sans-serif;
         }
 
-        .bg-secondary {
-            background-color: #EFECEC !important;
+        .container {
+            margin-top: 50px;
         }
 
-        .text-primary {
-            color: #0C2D57 !important;
+        table {
+            border: 3px solid #EFECEC;
+            border-top: none;
         }
 
-        .text-secondary {
-            color: #EFECEC !important;
+        .btn-custom {
+            background-color: #0C2D57;
+            color: #EFECEC;
         }
 
-        .btn-primary {
-            background-color: #FC6736 !important;
-            border-color: #FC6736 !important;
+        .btn-custom:hover {
+            background-color: #EFECEC;
+            color: #0C2D57;
         }
 
-        .btn-primary:hover {
-            background-color: #d65527 !important;
-            border-color: #d65527 !important;
+        .table-custom th,
+        .table-custom td {
+            border-color: #0C2D57;
         }
 
-        .btn-secondary {
-            background-color: #EFECEC !important;
-            border-color: #EFECEC !important;
-            color: #0C2D57 !important;
+        .table-custom th {
+            background-color: #0C2D57;
+            color: white;
+            font-weight: bold;
         }
 
-        .btn-secondary:hover {
-            background-color: #dfdcdc !important;
-            border-color: #dfdcdc !important;
-            color: #0C2D57 !important;
+        .table-custom tbody tr:hover {
+            background-color: #FFB0B0;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn-confirm-delete {
+            margin: auto;
         }
     </style>
 </head>
 
 <body>
-    <?php include('header.php'); ?>
-    <div class="container my-4">
-        <h1 class="text-primary">Content Management</h1>
-
-        <div class="card bg-secondary mb-4">
-            <div class="card-header bg-primary text-white">
-                <h2 class="mb-2">Bhajan Audio</h2>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text bg-primary text-white">Order By</span>
-                            <select class="form-select" id="orderBy">
-                                <option value="date_asc">Date (Ascending)</option>
-                                <option value="date_desc">Date (Descending)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text bg-primary text-white">Center</span>
-                            <select class="form-select" id="centerFilter">
-                                <option value="all">All Centers</option>
-                                <?php
-                                // Fetch center names from the database
-                                $query = "SELECT DISTINCT center_name FROM tbl_center";
-                                $result = mysqli_query($conn, $query);
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    echo '<option value="' . $row['center_name'] . '">' . $row['center_name'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <button class="btn btn-primary" id="filterBtn">Apply Filters</button>
-                    </div>
-                </div>
+    <!-- Toast message container -->
+    <div class="toast-container position-fixed top-50 start-50 translate-middle" id="toastContainer">
+        <div class="toast" id="deleteToast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Singer</th>
-                            <th>Center</th>
-                            <th>Audio</th>
-                            <th>Size</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($bhajanAudioData as $bhajan) : ?>
-                            <tr>
-                                <td><?php echo $bhajan['title']; ?></td>
-                                <td><?php echo $bhajan['singer']; ?></td>
-                                <td><?php echo $bhajan['center']; ?></td>
-                                <td>
-                                    <audio controls>
-                                        <source src="<?php echo $bhajan['audio_url']; ?>" type="audio/mpeg">
-                                        Your browser does not support the audio element.
-                                    </audio>
-                                </td>
-                                <td><?php echo $bhajan['file_size']; ?></td>
-                                <td>
-                                    <a href="edit_bhajan.php?id=<?php echo $bhajan['id']; ?>" class="btn btn-primary btn-sm">Edit</a>
-                                    <a href="delete_bhajan.php?id=<?php echo $bhajan['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this bhajan?');">Delete</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+            <div class="toast-body">
+                Content deleted successfully.
             </div>
         </div>
+    </div>
+    <?php include('header.php'); ?>
+    <div class="container">
+        <h1 class="text-center" style="color: #0C2D57;">Content Management</h1>
 
-        <div class="tab-pane fade" id="pravachanAudio" role="tabpanel" aria-labelledby="pravachanAudio-tab">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-text bg-primary text-white">Order By</span>
-                        <select class="form-select" id="pravachanOrderBy">
-                            <option value="date_asc">Date (Ascending)</option>
-                            <option value="date_desc">Date (Descending)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-text bg-primary text-white">Center</span>
-                        <select class="form-select" id="pravachanCenterFilter">
-                            <option value="all">All Centers</option>
-                            <?php
-                            // Fetch center names from the database
-                            $query = "SELECT DISTINCT center_name FROM tbl_center";
-                            $result = mysqli_query($conn, $query);
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                echo '<option value="' . $row['center_name'] . '">' . $row['center_name'] . '</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <button class="btn btn-primary" id="pravachanFilterBtn">Apply Filters</button>
-                </div>
-            </div>
-            <table class="table table-striped">
+        <h2 class="mt-5 text-center py-2 mb-0 " style="font-weight:700; background-color:#FC6736; color: #0C2D57;">Bhajan Audio</h2>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Singer</th>
+                        <th>Audio</th>
+                        <th>Upload Date</th>
+                        <th>Center Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Display Bhajan Audio Data -->
+                    <?php foreach ($bhajanAudioData as $content) : ?>
+                        <tr>
+                            <td><?php echo $content['title']; ?></td>
+                            <td><?php echo $content['speaker']; ?></td>
+                            <td>
+                                <audio controls>
+                                    <source src="<?php echo $content['file_path']; ?>">
+                                </audio>
+                            </td>
+                            <td><?php echo $content['upload_date']; ?></td>
+                            <td><?php echo $content['center_name']; ?></td>
+                            <td>
+                                <button class="btn btn-custom m-1">Edit</button>
+                                <button class="btn btn-danger m-1 delete-btn" data-id="<?php echo $content['id']; ?>">Delete</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Repeat the above structure for other content types -->
+
+        <h2 class="mt-2 text-center py-2 mb-0 " style="font-weight:700; background-color:#FC6736; color: #0C2D57;">Pravachan Audio</h2>
+        <div class="table-responsive">
+            <table class="table table-custom">
                 <thead>
                     <tr>
                         <th>Title</th>
                         <th>Speaker</th>
-                        <th>Center</th>
-                        <th>Audio</th>
-                        <th>Size</th>
-                        <th>Date</th>
+                        <th>Play</th>
+                        <th>Upload Date</th>
+                        <th>Center Name</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    <!-- Display Bhajan Audio Data -->
+                    <?php foreach ($pravachanAudioData as $content) : ?>
+                        <tr>
+                            <td><?php echo $content['title']; ?></td>
+                            <td><?php echo $content['speaker']; ?></td>
+                            <td>
+                                <audio controls>
+                                    <source src="<?php echo $content['file_path']; ?>">
+                                </audio>
+                            </td>
+                            <td><?php echo $content['upload_date']; ?></td>
+                            <td><?php echo $content['center_name']; ?></td>
+                            <td>
+                                <button class="btn btn-custom m-1">Edit</button>
+                                <button class="btn btn-danger m-1 delete-btn" data-id="<?php echo $content['id']; ?>">Delete</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="mt-5 text-center py-2 mb-0 " style="font-weight:700; background-color:#FC6736; color: #0C2D57;">Bhajan Video</h2>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Singer</th>
+                        <th>Play as Audio</th>
+                        <th>Upload Date</th>
+                        <th>Center Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Display Bhajan Audio Data -->
+                    <?php foreach ($bhajanVideoData as $content) : ?>
+                        <tr>
+                            <td><?php echo $content['title']; ?></td>
+                            <td><?php echo $content['speaker']; ?></td>
+                            <td>
+                                <audio controls>
+                                    <source src="<?php echo $content['file_path']; ?>">
+                                </audio>
+                            </td>
+                            <td><?php echo $content['upload_date']; ?></td>
+                            <td><?php echo $content['center_name']; ?></td>
+                            <td>
+                                <button class="btn btn-custom m-1">Edit</button>
+                                <button class="btn btn-danger m-1 delete-btn" data-id="<?php echo $content['id']; ?>">Delete</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="mt-2 text-center py-2 mb-0 " style="font-weight:700; background-color:#FC6736; color: #0C2D57;">Pravachan Video</h2>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Speaker</th>
+                        <th>Play as Audio</th>
+                        <th>Upload Date</th>
+                        <th>Center Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Display Bhajan Audio Data -->
+                    <?php foreach ($pravachanVideoData as $content) : ?>
+                        <tr>
+                            <td><?php echo $content['title']; ?></td>
+                            <td><?php echo $content['speaker']; ?></td>
+                            <td>
+                                <audio controls>
+                                    <source src="<?php echo $content['file_path']; ?>">
+                                </audio>
+                            </td>
+                            <td><?php echo $content['upload_date']; ?></td>
+                            <td><?php echo $content['center_name']; ?></td>
+                            <td>
+                                <button class="btn btn-custom m-1">Edit</button>
+                                <button class="btn btn-danger m-1 delete-btn" data-id="<?php echo $content['id']; ?>">Delete</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
             </table>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function() {
-            var bhajanAudioData = <?php echo json_encode($bhajanAudioData); ?>;
 
-            function renderTable(data) {
-                var tableBody = '';
-                for (var i = 0; i < data.length; i++) {
-                    tableBody += '<tr>';
-                    tableBody += '<td>' + data[i].title + '</td>';
-                    tableBody += '<td>' + data[i].singer + '</td>';
-                    tableBody += '<td>' + data[i].center + '</td>';
-                    tableBody += '<td><audio controls><source src="' + data[i].audio_url + '" type="audio/mpeg">Your browser does not support the audio element.</audio></td>';
-                    tableBody += '<td>' + data[i].file_size + '</td>';
-                    tableBody += '<td><a href="edit_bhajan.php?id=' + data[i].id + '" class="btn btn-primary btn-sm">Edit</a> <a href="delete_bhajan.php?id=' + data[i].id + '" class="btn btn-danger btn-sm" onclick="return confirm(\'Are you sure you want to delete this bhajan?\');">Delete</a></td>';
-                    tableBody += '</tr>';
-                }
-                $('tbody').html(tableBody);
-            }
+    <!-- Bootstrap Toast for Delete Confirmation -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+        <div id="deleteToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Delete Confirmation</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <div>Are you sure you want to delete this content?</div>
+                <button class="btn btn-danger btn-confirm-delete ms-2 m-3">Delete</button>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 
-            renderTable(bhajanAudioData);
+        <script>
+            // JavaScript code for deletion confirmation and AJAX request
+            document.addEventListener('DOMContentLoaded', function() {
+                const deleteButtons = document.querySelectorAll('.delete-btn');
+                const deleteToast = new bootstrap.Toast(document.getElementById('deleteToast'));
 
-            $('#filterBtn').click(function() {
-                var orderBy = $('#orderBy').val();
-                var centerFilter = $('#centerFilter').val();
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const contentId = this.dataset.id;
 
-                var filteredData = bhajanAudioData;
+                        // Show delete confirmation toast
+                        deleteToast.show();
 
-                // Filter by center
-                if (centerFilter !== 'all') {
-                    filteredData = filteredData.filter(function(item) {
-                        return item.center === centerFilter;
+                        // Confirm deletion on toast confirmation button click
+                        const confirmDeleteBtn = document.querySelector('.btn-confirm-delete');
+                        confirmDeleteBtn.addEventListener('click', function() {
+                            // Send AJAX request to delete content
+                            fetch(window.location.href, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded',
+                                    },
+                                    body: new URLSearchParams({
+                                        delete_id: contentId
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Reload the page after successful deletion
+                                    if (data.success) {
+                                        window.location.reload();
+                                    } else {
+                                        console.error('Error deleting content');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                        });
                     });
-                }
-
-                // Order by date
-                if (orderBy === 'date_asc') {
-                    filteredData.sort(function(a, b) {
-                        return new Date(a.date) - new Date(b.date);
-                    });
-                } else if (orderBy === 'date_desc') {
-                    filteredData.sort(function(a, b) {
-                        return new Date(b.date) - new Date(a.date);
-                    });
-                }
-
-                renderTable(filteredData);
+                });
             });
-        });
-
-        var pravachanAudioData = <?php echo json_encode(fetchContentData('Pravachan', 'mp3')); ?>;
-
-        renderTable(pravachanAudioData, '#pravachanAudio');
-
-        $('#pravachanFilterBtn').click(function() {
-            var orderBy = $('#pravachanOrderBy').val();
-            var centerFilter = $('#pravachanCenterFilter').val();
-
-            var filteredData = pravachanAudioData;
-
-            // Filter by center
-            if (centerFilter !== 'all') {
-                filteredData = filteredData.filter(function(item) {
-                    return item.center === centerFilter;
-                });
-            }
-
-            // Order by date
-            if (orderBy === 'date_asc') {
-                filteredData.sort(function(a, b) {
-                    return new Date(a.date) - new Date(b.date);
-                });
-            } else if (orderBy === 'date_desc') {
-                filteredData.sort(function(a, b) {
-                    return new Date(b.date) - new Date(a.date);
-                });
-            }
-
-            renderTable(filteredData, '#pravachanAudio');
-        });
-    </script>
+        </script>
 </body>
 
 </html>

@@ -76,9 +76,7 @@
         </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -92,6 +90,7 @@
 
             // When delete button is clicked
             $('.btn-delete').click(function(event) {
+
                 event.preventDefault(); // Prevent default link behavior
                 var devoteeId = $(this).data('devotee-id');
                 showConfirmation(devoteeId);

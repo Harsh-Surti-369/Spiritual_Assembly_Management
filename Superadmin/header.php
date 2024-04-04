@@ -24,7 +24,7 @@
                     <a class="nav-link" href="content.php" style="color: #EFECEC;">Content</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #EFECEC;">Reports</a>
+                    <a class="nav-link" href="#" style="color: #EFECEC;">Book</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="profile.php" style="color: #EFECEC;">Profile</a>
