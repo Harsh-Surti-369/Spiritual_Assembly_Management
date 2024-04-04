@@ -18,7 +18,7 @@ session_start();
         body {
             background-color: #EFECEC;
             color: #0C2D57;
-            padding-top: 40px;  
+            padding-top: 40px;
         }
 
         .container {
@@ -57,7 +57,9 @@ session_start();
 </head>
 
 <body>
-    <?php include('header.php'); ?>
+    <header style="margin-bottom: 150px;">
+        <?php include('header.php'); ?>
+    </header>
     <div class="container">
         <?php
         include('../php/dbConnect.php');

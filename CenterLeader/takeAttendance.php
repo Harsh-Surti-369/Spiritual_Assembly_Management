@@ -2,6 +2,8 @@
 session_start();
 include('../php/dbConnect.php');
 
+$messages = array(); // Array to store all messages
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve the sabha ID from the URL
     if (isset($_GET['sabha_id'])) {
@@ -23,21 +25,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // If no attendance record exists, insert a new one
                     $sql_insert_attendance = "INSERT INTO tbl_attendance (sabha_id, devotee_id, attendance_status, description) VALUES ('$sabha_id', '$devotee_id', '$attendance_status', '$sabha_summary')";
                     if ($conn->query($sql_insert_attendance) === TRUE) {
-                        echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-                                </div>";
+                        $messages[] = "Attendance record for devotee ID $devotee_id added successfully."; // Add success message to array
                     } else {
-                        echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                        <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-                        </div>";
+                        $messages[] = "Error adding attendance record for devotee ID $devotee_id: " . $conn->error; // Add error message to array
                     }
                 } else {
                     // If an attendance record already exists, update it
                     $sql_update_attendance = "UPDATE tbl_attendance SET attendance_status = '$attendance_status', description = '$sabha_summary' WHERE sabha_id = '$sabha_id' AND devotee_id = '$devotee_id'";
                     if ($conn->query($sql_update_attendance) === TRUE) {
-                        echo "Attendance for devotee ID $devotee_id updated successfully.";
+                        $messages[] = "Attendance record for devotee ID $devotee_id updated successfully."; // Add success message to array
                     } else {
-                        echo "Error updating attendance for devotee ID $devotee_id: " . $conn->error;
+                        $messages[] = "Error updating attendance record for devotee ID $devotee_id: " . $conn->error; // Add error message to array
                     }
                 }
             }
@@ -47,13 +45,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql_update_summary = "UPDATE tbl_attendance SET description = '$sabha_summary' WHERE sabha_id = '$sabha_id'";
         // Execute the SQL query for updating sabha summary
         if ($conn->query($sql_update_summary) === TRUE) {
-            echo "Sabha summary updated successfully.";
+            $messages[] = "Sabha summary updated successfully."; // Add success message to array
         } else {
-            echo "Error updating sabha summary: " . $conn->error;
+            $messages[] = "Error updating sabha summary: " . $conn->error; // Add error message to array
         }
     } else {
         // Handle the case when sabha ID is missing in the URL
-        echo "Error: Sabha ID is missing in the URL.";
+        $messages[] = "Error: Sabha ID is missing in the URL."; // Add error message to array
     }
 }
 ?>
@@ -81,8 +79,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <?php include('header.php'); ?>
-    <div class="container" stye="padding-top:50px;">
+    <header style="margin-bottom: 150px;">
+        <?php include('header.php'); ?>
+    </header>
+    <div class="container" style="padding-top:50px;">
         <h2 class="text-center mb-4">Take Attendance</h2>
         <form id="attendanceForm" action="takeAttendance.php?sabha_id=<?php echo $_GET['sabha_id']; ?>" method="post">
             <div class="form-group">
@@ -118,6 +118,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" class="btn btn-primary">Submit Attendance</button>
         </form>
     </div>
+
+    <!-- Display Bootstrap toasts for messages -->
+    <?php foreach ($messages as $message) { ?>
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+            <div class="toast-header">
+                <strong class="me-auto">Message</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <?php echo $message; ?>
+            </div>
+        </div>
+    <?php } ?>
+
     <script>
         function toggleAttendance(element) {
             if (element.style.backgroundColor === 'green') {

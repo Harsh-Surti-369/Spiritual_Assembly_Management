@@ -47,7 +47,9 @@
 </head>
 
 <body>
-    <?php include('header.php'); ?>
+    <header style="margin-bottom: 150px;">
+        <?php include('header.php'); ?>
+    </header>
     <div class="container">
         <h1 class="mb-4">Question by Devotees</h1>
 

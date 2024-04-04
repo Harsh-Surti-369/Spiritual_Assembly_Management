@@ -61,7 +61,9 @@
 </head>
 
 <body>
-    <?php include('header.php'); ?>
+    <header style="margin-bottom: 150px;">
+        <?php include('header.php'); ?>
+    </header>
     <div class="container" stye="padding-top:50px;">
         <h2 class="text-center mb-4">Sabha List</h2>
         <div class="row">
@@ -117,7 +119,7 @@
     </div>
 
     <script>
-        
+
     </script>
 </body>
 

@@ -17,8 +17,6 @@ $devoteeCountQuery = "SELECT COUNT(*) AS devotee_count FROM tbl_devotee";
 $devoteeCountResult = mysqli_query($conn, $devoteeCountQuery);
 $devoteeCount = mysqli_fetch_assoc($devoteeCountResult)['devotee_count'];
 
-
-
 // Step 1: Data Retrieval
 // Connect to the database and retrieve data for all centers
 $sql = "SELECT c.center_name, COUNT(d.devotee_id) AS devotee_count
@@ -27,11 +25,10 @@ $sql = "SELECT c.center_name, COUNT(d.devotee_id) AS devotee_count
         GROUP BY c.center_id";
 $result = $conn->query($sql);
 
-// Initialize an empty array to store data points
+// Initialize an empty array to store data points for the pie chart
 $dataPoints = array();
 
-// Fetch data from the result set
-// Fetch data from the result set
+// Fetch data from the result set for the pie chart
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         // Add center name and devotee count to data points
@@ -46,10 +43,59 @@ if ($result->num_rows > 0) {
         echo "Error encoding data points to JSON.";
         exit; // Stop further execution
     }
-} else {
+}
+
+// Construct SQL query based on selected center
+$selectedCenterId = isset($_POST['center']) ? $_POST['center'] : 'all';
+$s = "SELECT 
+            DATE_FORMAT(s.date, '%Y-%m') AS month_year,
+            c.center_name,
+            COUNT(a.attendance_id) AS total_attendees,
+            COUNT(d.devotee_id) AS expected_attendance,
+            CONCAT(ROUND((COUNT(a.attendance_id) / COUNT(d.devotee_id)) * 100, 2), '%') AS attendance_percentage
+        FROM 
+            tbl_sabha s
+        JOIN 
+            tbl_center c ON s.center_id = c.center_id
+        LEFT JOIN 
+            tbl_attendance a ON s.sabha_id = a.sabha_id
+        LEFT JOIN 
+            tbl_devotee d ON s.center_id = d.center_id";
+
+if ($selectedCenterId != 'all') {
+    $s .= " WHERE c.center_id = '$selectedCenterId'";
+}
+
+$s .= " GROUP BY 
+            month_year, c.center_id
+        ORDER BY 
+            month_year DESC";
+
+$result = $conn->query($s);
+
+// Initialize arrays to hold data for the column chart
+$months = array();
+$centerChartData = array();
+
+// Fetch data and organize it by months and centers for the column chart
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $monthYear = $row['month_year'];
+        $centerName = $row['center_name'];
+        $attendancePercentage = round(($row['total_attendees'] / $row['expected_attendance']) * 100, 2);
+
+        if (!isset($centerChartData[$centerName])) {
+            $centerChartData[$centerName] = array();
+        }
+
+        $centerChartData[$centerName][$monthYear] = $attendancePercentage;
+
+        if (!in_array($monthYear, $months)) {
+            $months[] = $monthYear;
+        }
+    }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -100,7 +146,11 @@ if ($result->num_rows > 0) {
 </head>
 
 <body>
-    <?php include('header.php'); ?>
+    <header style="margin-bottom: 150px;">
+        <?php include('header.php'); ?>
+    </header>
+
+    <!--crads for total devotees and centers -->
     <div class="container-fluid mt-4">
         <div class="row">
             <div class="row m-2">
@@ -126,7 +176,35 @@ if ($result->num_rows > 0) {
         </div>
     </div>
 
-    <div class="mb-3" id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <!-- center wise distribution of the devotees -->
+    <div class="mb-3" id="chartContainer" style="height: 400px; width: 100%;"></div>
+
+
+    <!-- form for selecting center -->
+    <form id="centerForm" method="post" action="">
+        <label for="center">Select Center:</label>
+        <select id="center" name="center">
+            <option value="all">All Centers</option>
+            <?php
+            // Fetch centers from the database and populate the select options
+            $centerQuery = "SELECT center_id, center_name FROM tbl_center";
+            $centerResult = mysqli_query($conn, $centerQuery);
+
+            if ($centerResult && mysqli_num_rows($centerResult) > 0) {
+                while ($row = mysqli_fetch_assoc($centerResult)) {
+                    $centerId = $row['center_id'];
+                    $centerName = $row['center_name'];
+                    echo "<option value='$centerId'>$centerName</option>";
+                }
+            }
+            ?>
+        </select>
+        <input type="submit" value="Submit">
+    </form>
+
+    <!-- chart for attendance percentage in months -->
+    <div id="centerChartContainer" style="height: 600px; width: 100%;"></div>
+
 
     <div class="row">
         <div class="col-md-12 mb-4">
@@ -207,70 +285,55 @@ if ($result->num_rows > 0) {
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header bg-secondary">
-                    <h5 class="card-title text-primary">Devotee Attendance</h5>
-                    <div class="d-flex justify-content-end">
-                        <select class="form-select form-select-sm">
-                            <option value="">Select Devotee</option>
-                            <option value="devotee1">Alice Johnson</option>
-                            <option value="devotee2">Bob Williams</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <canvas id="devoteeAttendanceChart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header bg-secondary">
-                    <h5 class="card-title text-primary">Overall Attendance</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="overallAttendanceChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
     <script>
         $(document).ready(function() {
-            // Function to load devotees based on selected center
-            function loadDevotees(centerId) {
+            // Function to render the column chart
+            function renderColumnChart(data) {
+                var chart = new CanvasJS.Chart("centerChartContainer", {
+                    animationEnabled: true,
+                    exportEnabled: true,
+                    theme: "light1",
+                    title: {
+                        text: "Center-wise Attendance Percentage"
+                    },
+                    axisY: {
+                        includeZero: true,
+                        title: "Attendance Percentage"
+                    },
+                    data: [{
+                        type: "column",
+                        dataPoints: data
+                    }]
+                });
+                chart.render();
+            }
+
+            $('#centerForm').submit(function(e) {
+                e.preventDefault(); // Prevent default form submission
+                var centerId = $('#center').val(); // Get selected center ID
+
+                // Ajax request to fetch attendance data for the selected center
                 $.ajax({
-                    url: 'get_devotees.php', // Change this to the actual file name that fetches devotees based on center
-                    type: 'GET',
+                    url: 'index.php', // Replace with the actual file name to fetch data
+                    type: 'POST',
                     data: {
                         center_id: centerId
                     },
                     success: function(response) {
-                        $('#devoteeTable tbody').html(response);
+                        var data = JSON.parse(response); // Parse the JSON response
+                        renderColumnChart(data); // Render the column chart with fetched data
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
                     }
                 });
-            }
-
-            // Event listener for center filter change
-            $('#centerFilter').change(function() {
-                var centerId = $(this).val();
-                loadDevotees(centerId);
             });
 
-            // Initial load of devotees
-            loadDevotees('');
-        });
-
-        window.onload = function() {
-            // Step 4: Front-end Integration
-            // Include the CanvasJS library and render the pie chart
+            // Initial rendering of the pie chart
             var chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
                 exportEnabled: true,
@@ -287,7 +350,7 @@ if ($result->num_rows > 0) {
                 }]
             });
             chart.render();
-        }
+        });
     </script>
 </body>
 

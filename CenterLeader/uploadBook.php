@@ -120,9 +120,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <?php include('header.php'); ?>
-
-
+    <header style="margin-bottom: 150px;">
+        <?php include('header.php'); ?>
+    </header>
     <div class="container mt-3" stye="padding-top:50px;">
         <h1 class="text-center mb-4">Book Upload</h1>
         <?php if (!empty($alertMessage)) : ?>

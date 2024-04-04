@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="toast-body">Please select a date that is today or in the future.</div>
           </div>';
-            exit(); 
+            exit();
         }
 
         $sql_insert_sabha = "INSERT INTO tbl_sabha (title, description, speaker, sabha_type, timing_from, timing_to, location, date, center_id)
@@ -147,8 +147,9 @@ $conn->close();
 </head>
 
 <body>
-    <?php include('header.php'); ?>
-
+    <header style="margin-bottom: 150px;">
+        <?php include('header.php'); ?>
+    </header>
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">

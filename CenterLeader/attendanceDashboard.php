@@ -1,66 +1,66 @@
 <?php
-// session_start();
-// include('../php/dbConnect.php');
+session_start();
+include('../php/dbConnect.php');
 
-// $period = isset($_GET['period']) ? $_GET['period'] : 'lifetime';
-// $devotee_id = $_GET['devotee_id'];
+$period = isset($_GET['period']) ? $_GET['period'] : 'lifetime';
+$devotee_id = $_GET['devotee_id'];
 
-// $totalSabhas = 0;
-// $presentCount = 0;
-// $attendancePercentage = 0;
+$totalSabhas = 0;
+$presentCount = 0;
+$attendancePercentage = 0;
 
-// switch ($period) {
-//     case 'last_month':
-//         $currentDate = new DateTime();
-//         $currentDate->modify('last month');
-//         $lastMonthSameDate = $currentDate->format('Y-m-d');
-//         $startDate = $lastMonthSameDate;
-//         $endDate = date('Y-m-d'); // Today's date
-//         break;
-//     case 'last_year':
-//         $startDate = date('Y-m-d', strtotime('-1 year'));
-//         $endDate = date('Y-m-d');
-//         break;
-//     default:
-//         $joinDateQuery = "SELECT joining_date FROM tbl_devotee WHERE devotee_id = ?";
-//         $joinDateStmt = $conn->prepare($joinDateQuery);
-//         $joinDateStmt->bind_param("i", $devotee_id);
-//         $joinDateStmt->execute();
-//         $joinDateResult = $joinDateStmt->get_result();
-//         if ($joinDateRow = $joinDateResult->fetch_assoc()) {
-//             $startDate = $joinDateRow['joining_date'];
-//             $endDate = date('Y-m-d'); // Today's date
-//         } else {
-//             $startDate = "";
-//             $endDate = date('Y-m-d'); // Today's date
-//         }
-//         break;
-// }
+switch ($period) {
+    case 'last_month':
+        $currentDate = new DateTime();
+        $currentDate->modify('last month');
+        $lastMonthSameDate = $currentDate->format('Y-m-d');
+        $startDate = $lastMonthSameDate;
+        $endDate = date('Y-m-d'); // Today's date
+        break;
+    case 'last_year':
+        $startDate = date('Y-m-d', strtotime('-1 year'));
+        $endDate = date('Y-m-d');
+        break;
+    default:
+        $joinDateQuery = "SELECT joining_date FROM tbl_devotee WHERE devotee_id = ?";
+        $joinDateStmt = $conn->prepare($joinDateQuery);
+        $joinDateStmt->bind_param("i", $devotee_id);
+        $joinDateStmt->execute();
+        $joinDateResult = $joinDateStmt->get_result();
+        if ($joinDateRow = $joinDateResult->fetch_assoc()) {
+            $startDate = $joinDateRow['joining_date'];
+            $endDate = date('Y-m-d'); // Today's date
+        } else {
+            $startDate = "";
+            $endDate = date('Y-m-d'); // Today's date
+        }
+        break;
+}
 
-// $sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, COALESCE(a.attendance_status, 'Absent') AS attendance_status, a.description
-//                       FROM tbl_sabha s
-//                       LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
-//                       WHERE s.center_id = ? AND s.date BETWEEN ? AND ?
-//                       ORDER BY s.date DESC";
+$sabhaDetailsQuery = "SELECT s.title, s.date, s.speaker, COALESCE(a.attendance_status, 'Absent') AS attendance_status, a.description
+                      FROM tbl_sabha s
+                      LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
+                      WHERE s.center_id = ? AND s.date BETWEEN ? AND ?
+                      ORDER BY s.date DESC";
 
-// $sabhaDetailsStmt = $conn->prepare($sabhaDetailsQuery);
-// $sabhaDetailsStmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $startDate, $endDate);
-// $sabhaDetailsStmt->execute();
-// $sabhaDetailsResult = $sabhaDetailsStmt->get_result();
+$sabhaDetailsStmt = $conn->prepare($sabhaDetailsQuery);
+$sabhaDetailsStmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $startDate, $endDate);
+$sabhaDetailsStmt->execute();
+$sabhaDetailsResult = $sabhaDetailsStmt->get_result();
 
-// $datapoints = array(
-//     array("label" => "Present", "y" => 0),
-//     array("label" => "Absent", "y" => 100)
-// );
+$datapoints = array(
+    array("label" => "Present", "y" => 0),
+    array("label" => "Absent", "y" => 100)
+);
 
-// if ($totalSabhas > 0) {
-//     $datapoints = array(
-//         array("label" => "Present", "y" => $attendancePercentage),
-//         array("label" => "Absent", "y" => 100 - $attendancePercentage)
-//     );
-// }
+if ($totalSabhas > 0) {
+    $datapoints = array(
+        array("label" => "Present", "y" => $attendancePercentage),
+        array("label" => "Absent", "y" => 100 - $attendancePercentage)
+    );
+}
 ?>
-<!-- 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -108,30 +108,30 @@
             <h1>All sabhas</h1>
             <?php
 
-            // if ($sabhaDetailsResult->num_rows > 0) {
-            //     $totalSabhas = $sabhaDetailsResult->num_rows;
-            //     echo "<p><strong>Total Sabhas: $totalSabhas</strong></p>";
+            if ($sabhaDetailsResult->num_rows > 0) {
+                $totalSabhas = $sabhaDetailsResult->num_rows;
+                echo "<p><strong>Total Sabhas: $totalSabhas</strong></p>";
 
-            //     while ($row = $sabhaDetailsResult->fetch_assoc()) {
-            //         $sabhaTitle = $row['title'];
-            //         $sabhaDate = date('Y-m-d', strtotime($row['date']));
-            //         $sabhaSpeaker = $row['speaker'];
-            //         $attendanceStatus = $row['attendance_status'];
-            //         $description = $row['description'];
+                while ($row = $sabhaDetailsResult->fetch_assoc()) {
+                    $sabhaTitle = $row['title'];
+                    $sabhaDate = date('Y-m-d', strtotime($row['date']));
+                    $sabhaSpeaker = $row['speaker'];
+                    $attendanceStatus = $row['attendance_status'];
+                    $description = $row['description'];
 
-            //         echo "<div class='sabha-details'>
-            //                 <h3 class='title'>$sabhaTitle</h3>
-            //                 <p><strong>Date:</strong> $sabhaDate</p>
-            //                 <p><strong>Speaker:</strong> $sabhaSpeaker</p>
-            //                 <p class='status'><strong>Attendance Status:</strong> $attendanceStatus</p>
-            //                 <p><strong>Description:</strong> $description</p>
-            //               </div>";
-            //     }
-            // } else {
-            //     echo "<div class='alert alert-warning' role='alert'>
-            //             No sabhas found for the selected period.
-            //           </div>";
-            // }
+                    echo "<div class='sabha-details'>
+                            <h3 class='title'>$sabhaTitle</h3>
+                            <p><strong>Date:</strong> $sabhaDate</p>
+                            <p><strong>Speaker:</strong> $sabhaSpeaker</p>
+                            <p class='status'><strong>Attendance Status:</strong> $attendanceStatus</p>
+                            <p><strong>Description:</strong> $description</p>
+                          </div>";
+                }
+            } else {
+                echo "<div class='alert alert-warning' role='alert'>
+                        No sabhas found for the selected period.
+                      </div>";
+            }
             ?>
         </div>
     </div>
@@ -174,4 +174,4 @@
     </script>
 </body>
 
-</html> -->
+</html>

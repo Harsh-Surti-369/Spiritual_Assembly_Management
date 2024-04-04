@@ -52,7 +52,9 @@ if (isset($_GET['devotee_id'])) {
 </head>
 
 <body>
-    <?php include('header.php'); ?>
+    <header style="margin-bottom: 150px;">
+        <?php include('header.php'); ?>
+    </header>
     <div class="container" stye="padding-top:50px;">
         <h2 class="my-4">Update Devotee</h2>
         <form action="updateDevotee.php?devotee_id=<?php echo $devotee_id; ?>" method="post">

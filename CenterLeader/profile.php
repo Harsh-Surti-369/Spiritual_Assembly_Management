@@ -105,8 +105,9 @@ $conn->close();
 </head>
 
 <body>
-  <?php include('header.php'); ?>
-
+  <header style="margin-bottom: 150px;">
+    <?php include('header.php'); ?>
+  </header>
   <div class="container my-5" style="margin-top:50px !important;">
     <h1>Leader Profile</h1>
     <?php

@@ -13,11 +13,11 @@
 </head>
 
 <body>
-    <?php
-    include('header.php');
-    ?>
-    <div class="container-fluid mt-5" stye="padding-top:40px">
-        <h2 class="text-center mb-4">Manage Devotees</h2>
+    <header style="margin-bottom: 150px;">
+        <?php include('header.php'); ?>
+    </header>
+    <div class="container-fluid mt-1" stye="padding-top:40px">
+        <h2 class="text-center mb-2">Manage Devotees</h2>
         <?php
         session_start();
         include('../php/dbConnect.php');
@@ -39,9 +39,9 @@
                 echo "<table class='table table-bordered table-devotees'><thead class='table-header'><tr><th>Name</th><th>Email</th><th>Phone</th><th>DOB</th><th>Gender</th><th>Joining Date</th><th>Actions</th></tr></thead><tbody>";
                 while ($devotee_row = $devotee_result->fetch_assoc()) {
                     echo "<tr><td>" . $devotee_row["name"] . "</td><td>" . $devotee_row["email"] . "</td><td>" . $devotee_row["mobile_number"] . "</td><td>" . $devotee_row["dob"] . "</td><td>" . $devotee_row["gender"] . "</td><td>" . $devotee_row["joining_date"] . "</td>";
-                    echo "<td><a href='updateDevotee.php?devotee_id=" . $devotee_row["devotee_id"] . "'class='btn btn-primary'>Update</a>
-                            <a href='#' class='btn btn-danger btn-delete' data-devotee-id='" . $devotee_row["devotee_id"] . "'>Delete</a>
-                            <a href='attendanceDashboard.php?devotee_id=" . $devotee_row["devotee_id"] . "' class='btn btn-primary'>Attendance</a></td>
+                    echo "<td><a href='updateDevotee.php?devotee_id=" . $devotee_row["devotee_id"] . "'class='btn bn-sm btn-primary'>Update</a>
+                            <a href='#' class='btn btn-sm btn-danger btn-delete' data-devotee-id='" . $devotee_row["devotee_id"] . "'>Delete</a>
+                            <a href='attendanceDashboard.php?devotee_id=" . $devotee_row["devotee_id"] . "' class='btn btn-sm btn-primary'>Attendance</a></td>
                             </tr>";
                 }
                 echo "</tbody></table>";
