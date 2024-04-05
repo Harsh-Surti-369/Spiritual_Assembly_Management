@@ -29,7 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $result_check_details = $conn->query($sql_check_details);
 
                 if ($result_check_details->num_rows > 0) {
-                    // Details already inserted, redirect to another page
                     header("Location: ../centerleader/index.php");
                     exit();
                 } else {

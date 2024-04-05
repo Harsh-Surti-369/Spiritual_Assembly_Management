@@ -14,13 +14,16 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+                            <a class="nav-link" aria-current="page" href="index.php">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="uploadContent.php">Bhajan/Pravachan</a>
+                            <a class="nav-link" aria-current="page" href="dashbpard.php">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="uploadbook.php">Book</a>
+                            <a class="nav-link" href="content.php">Bhajan/Pravachan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="book.php">Book</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="qlist.php">QnA</a>

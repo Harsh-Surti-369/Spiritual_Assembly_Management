@@ -1,11 +1,13 @@
 <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #0C2D57;">
     <div class="container-fluid">
-        <figure class="d-flex align-items-center justify-content-center py-2">
-            <img style="width:7vw" class="mx-1" src="../images/logo.png" alt="logo">
-            <caption>
-                <a class="navbar-brand" href="index.php" style="color: #EFECEC;">PWA Admin</a>
-            </caption>
-        </figure>
+        <a class="navbar-brand" href="index.php" style="color: #EFECEC;">
+            <figure class="d-flex align-items-center justify-content-center py-2">
+                <img style="width:7vw" class="mx-1" src="../images/logo.png" alt="logo">
+                <caption>
+                    PWA Admin
+                </caption>
+            </figure>
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style="background-color: #EFECEC;">
             <span class="navbar-toggler-icon" style="background-color: #EFECEC;"></span>
         </button>
@@ -24,7 +26,7 @@
                     <a class="nav-link" href="content.php" style="color: #EFECEC;">Content</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #EFECEC;">Book</a>
+                    <a class="nav-link" href="book.php" style="color: #EFECEC;">Book</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="profile.php" style="color: #EFECEC;">Profile</a>

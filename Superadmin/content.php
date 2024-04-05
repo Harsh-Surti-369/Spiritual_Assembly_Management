@@ -78,6 +78,7 @@ if (isset($_POST['delete_id'])) {
     echo json_encode(array('success' => $deletionSuccess));
     exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -96,6 +97,10 @@ if (isset($_POST['delete_id'])) {
 
         .container {
             margin-top: 50px;
+        }
+
+        h2 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
         table {
@@ -142,9 +147,8 @@ if (isset($_POST['delete_id'])) {
 </head>
 
 <body>
-    <!-- Toast message container -->
-    <div class="toast-container position-fixed top-50 start-50 translate-middle" id="toastContainer">
-        <div class="toast" id="deleteToast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+        <div id="successToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header bg-success text-white">
                 <strong class="me-auto">Success</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -155,8 +159,8 @@ if (isset($_POST['delete_id'])) {
         </div>
     </div>
     <?php include('header.php'); ?>
-    <div class="container">
-        <h1 class="text-center" style="color: #0C2D57;">Content Management</h1>
+    <div class="container my-5">
+        <h1 class="text-center" style="color: #0C2D57; font-weight:900;">Content Management</h1>
 
         <h2 class="mt-5 text-center py-2 mb-0 " style="font-weight:700; background-color:#FC6736; color: #0C2D57;">Bhajan Audio</h2>
         <div class="table-responsive">
@@ -185,7 +189,8 @@ if (isset($_POST['delete_id'])) {
                             <td><?php echo $content['upload_date']; ?></td>
                             <td><?php echo $content['center_name']; ?></td>
                             <td>
-                                <button class="btn btn-custom m-1">Edit</button>
+
+                                <a class="btn btn-custom m-1 edit-btn" href="edit_content.php?id=<?php echo $content['id']; ?>">Edit</a>
                                 <button class="btn btn-danger m-1 delete-btn" data-id="<?php echo $content['id']; ?>">Delete</button>
                             </td>
                         </tr>
@@ -223,7 +228,8 @@ if (isset($_POST['delete_id'])) {
                             <td><?php echo $content['upload_date']; ?></td>
                             <td><?php echo $content['center_name']; ?></td>
                             <td>
-                                <button class="btn btn-custom m-1">Edit</button>
+
+                                <a class="btn btn-custom m-1 edit-btn" href="edit_content.php?id=<?php echo $content['id']; ?>">Edit</a>
                                 <button class="btn btn-danger m-1 delete-btn" data-id="<?php echo $content['id']; ?>">Delete</button>
                             </td>
                         </tr>
@@ -259,7 +265,8 @@ if (isset($_POST['delete_id'])) {
                             <td><?php echo $content['upload_date']; ?></td>
                             <td><?php echo $content['center_name']; ?></td>
                             <td>
-                                <button class="btn btn-custom m-1">Edit</button>
+
+                                <a class="btn btn-custom m-1 edit-btn" href="edit_content.php?id=<?php echo $content['id']; ?>">Edit</a>
                                 <button class="btn btn-danger m-1 delete-btn" data-id="<?php echo $content['id']; ?>">Delete</button>
                             </td>
                         </tr>
@@ -295,7 +302,7 @@ if (isset($_POST['delete_id'])) {
                             <td><?php echo $content['upload_date']; ?></td>
                             <td><?php echo $content['center_name']; ?></td>
                             <td>
-                                <button class="btn btn-custom m-1">Edit</button>
+                                <a class="btn btn-custom m-1 edit-btn" href="edit_content.php?id=<?php echo $content['id']; ?>">Edit</a>
                                 <button class="btn btn-danger m-1 delete-btn" data-id="<?php echo $content['id']; ?>">Delete</button>
                             </td>
                         </tr>
@@ -323,10 +330,10 @@ if (isset($_POST['delete_id'])) {
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 
         <script>
-            // JavaScript code for deletion confirmation and AJAX request
             document.addEventListener('DOMContentLoaded', function() {
                 const deleteButtons = document.querySelectorAll('.delete-btn');
                 const deleteToast = new bootstrap.Toast(document.getElementById('deleteToast'));
+                const successToastEl = document.getElementById('successToast');
 
                 deleteButtons.forEach(button => {
                     button.addEventListener('click', function() {
@@ -350,9 +357,15 @@ if (isset($_POST['delete_id'])) {
                                 })
                                 .then(response => response.json())
                                 .then(data => {
-                                    // Reload the page after successful deletion
+                                    console.log(data); // Log response data
+                                    // Show success toast message if deletion was successful
                                     if (data.success) {
-                                        window.location.reload();
+                                        const successToast = new bootstrap.Toast(successToastEl);
+                                        successToast.show(); // Show the success toast
+                                        // Reload the page after showing the success message
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 2000); // Delay the reload for 2 seconds
                                     } else {
                                         console.error('Error deleting content');
                                     }

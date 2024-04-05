@@ -11,8 +11,6 @@ $totalSabhas = 0;
 $presentCount = 0;
 $attendancePercentage = 0;
 
-
-
 // Get the start and end dates for the selected period
 switch ($period) {
     case 'last_month':
