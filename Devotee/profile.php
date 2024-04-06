@@ -2,16 +2,16 @@
 session_start();
 include('../php/dbConnect.php');
 
-// Check if leader is logged in
-if (!isset($_SESSION['leader_id'])) {
-  header("Location: login.php");
-  exit;
+// Check if devotee is logged in
+if (!isset($_SESSION['devotee_id'])) {
+    header("Location: login.php");
+    exit;
 }
 
-$leader_id = $_SESSION['leader_id'];
+$devotee_id = $_SESSION['devotee_id'];
 
 // Retrieve leader information from the database
-$sql = "SELECT * FROM tbl_leader WHERE leader_id = '$leader_id'";
+$sql = "SELECT * FROM tbl_devotee WHERE devotee_id = '$devotee_id'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -28,15 +28,15 @@ if ($result->num_rows > 0) {
     $gender = $_POST["gender"];
 
     // Update leader details in the database
-    $updateQuery = "UPDATE tbl_leader SET name = '$name', email = '$email', m_no = '$mobile_number', address = '$address', DOB = '$dob', gender = '$gender' WHERE leader_id = '$leader_id'";
+    $updateQuery = "UPDATE tbl_devotee SET name = '$name', email = '$email', m_no = '$mobile_number', address = '$address', DOB = '$dob', gender = '$gender' WHERE devotee_id = '$devotee_id'";
     if ($conn->query($updateQuery) === TRUE) {
-      $success_message = "Leader details updated successfully.";
+      $success_message = "devotee details updated successfully.";
     } else {
-      $error_message = "Error updating leader details. Please try again.";
+      $error_message = "Error updating devotee details. Please try again.";
     }
   }
 } else {
-  $error_message = "Leader not found.";
+  $error_message = "devotee not found.";
   exit;
 }
 
@@ -48,7 +48,7 @@ $conn->close();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leader Profile</title>
+  <title>devotee Profile</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" href="../css/CenterLeader/header.css">
   <style>
@@ -105,11 +105,11 @@ $conn->close();
 </head>
 
 <body>
-  <header style="margin-bottom: 150px;">
+  <header>
     <?php include('header.php'); ?>
   </header>
   <div class="container my-5" style="margin-top:50px !important;">
-    <h1>Leader Profile</h1>
+    <h1>Devotee Profile</h1>
     <?php
     // Display success or error message if set
     if (isset($success_message)) {
