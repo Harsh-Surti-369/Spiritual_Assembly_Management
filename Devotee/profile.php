@@ -15,7 +15,7 @@ $sql = "SELECT * FROM tbl_devotee WHERE devotee_id = '$devotee_id'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-  $leader = $result->fetch_assoc();
+  $leader = $result->fetch_assoc();  
 
   // Handle form submission for updating leader details
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
