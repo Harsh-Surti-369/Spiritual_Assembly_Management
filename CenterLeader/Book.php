@@ -1,5 +1,12 @@
 <?php
 session_start();
+
+// Check if leader is logged in
+if (!isset($_SESSION['leader_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
 include('../php/dbConnect.php');
 
 // Fetch books uploaded by the center
@@ -92,6 +99,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['book_id'])) {
     </header>
     <div class="container mt-3">
         <h1 class="text-center mb-4">Uploaded Books</h1>
+        <div class="text-end mb-4">
+            <a href="uploadbook.php" class="btn btn-primary">Upload New</a>
+        </div>
+
         <div class="row" id="bookList">
             <?php while ($row = $result->fetch_assoc()) : ?>
                 <div class="col-md-6">

@@ -61,26 +61,33 @@ if ($devotee_result) {
 } else {
     // Query failed
     $devotee_records = array(); // Initialize as empty array
-}
-
-// Fetch one record for each type
+} // Fetch one record for each type
 $content = [];
 
 // Define the categories and corresponding file extensions
 $categories = ['bhajan audio', 'pravachan audio', 'bhajan video', 'pravachan video'];
 $extensions = ['mp3', 'mp3', 'mp4', 'mp4'];
 
-// Loop through each category and fetch one record
-foreach ($categories as $index => $category) {
-    $extension = $extensions[$index];
-    $sql = "SELECT * FROM tbl_content WHERE category = '$category' AND file_path LIKE '%.$extension' ORDER BY upload_date DESC LIMIT 1";
-    $result = mysqli_query($conn, $sql);
+// Prepare and execute SQL query using prepared statements
+$sql = "SELECT * FROM tbl_content WHERE category = ? AND (file_path LIKE ? OR file_path LIKE ?) ORDER BY upload_date DESC LIMIT 1";
+$stmt = $conn->prepare($sql);
 
-    if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
+foreach ($categories as $index => $category) {
+    $extension = '%' . $extensions[$index];
+    $mp3_extension = $extension . '.mp3';
+    $mp4_extension = $extension . '.mp4';
+    $stmt->bind_param("sss", $category, $mp3_extension, $mp4_extension);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
         $content[$category] = $row;
     }
 }
+
+// Close the prepared statement
+$stmt->close();
 
 ?>
 <!DOCTYPE html>
@@ -90,7 +97,11 @@ foreach ($categories as $index => $category) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Center Leader Home</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
+    <link rel="stylesheet" href="../css/CenterLeader/managedevotees.css">
+    <link rel="stylesheet" href="../css/CenterLeader/header.css">
     <style>
         :root {
             --primary-color: #0C2D57;
@@ -149,11 +160,12 @@ foreach ($categories as $index => $category) {
 </head>
 
 <body>
-    <header class="header mb-5">
+    <header style="margin-bottom: 150px;">
         <?php include('header.php'); ?>
     </header>
 
     <main class="container my-5">
+
         <section class="mb-5">
             <h2 class="section-heading text-center mb-4">Center Information</h2>
             <div class="center-details text-center mb-4">
@@ -162,12 +174,8 @@ foreach ($categories as $index => $category) {
                 <p><strong>Email:</strong> <?php echo $leader_info['email']; ?></p>
                 <p><strong>Phone:</strong> <?php echo $leader_info['m_no']; ?></p>
             </div>
-
-            <div class="text-center">
-                <a href="update_center.php" class="btn btn-primary">Update Center Information</a>
-            </div>
         </section>
-
+        <hr style="height: 5px;">
         <section class="mb-5">
             <h2 class="section-heading text-center mb-4">Upcoming Events</h2>
             <div id="event-list" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -198,10 +206,10 @@ foreach ($categories as $index => $category) {
 
             <!-- Link to create new sabha -->
             <div class="text-center mt-4">
-                <a href="create_sabha.php" class="btn btn-primary">Create New Sabha</a>
+                <a href="createsabha.php" class="btn btn-primary">Create New Sabha</a>
             </div>
         </section>
-
+        <hr>
         <section class="mb-5">
             <h2 class="section-heading text-center mb-4">Latest Joined Devotees</h2>
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -221,11 +229,11 @@ foreach ($categories as $index => $category) {
 
             <!-- Link to manage devotees -->
             <div class="text-center mt-4">
-                <a href="manage_devotees.php" class="btn btn-primary">Manage Devotees</a>
+                <a href="dashboard.php" class="btn btn-primary">Manage Devotees</a>
             </div>
         </section>
 
-        <section class="mb-5">
+        <!-- <section class="mb-5">
             <h2 class="section-heading text-center mb-4">Uploaded Content</h2>
             <div class="row">
                 <div class="col-md-12 mb-4">
@@ -288,7 +296,7 @@ foreach ($categories as $index => $category) {
             <div class="text-center mt-4">
                 <a href="Content.php" class="btn btn-primary">Manage all Bhajan/Pravachan</a>
             </div>
-        </section>
+        </section> -->
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

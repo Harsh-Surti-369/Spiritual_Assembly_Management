@@ -59,28 +59,6 @@ $result = $conn->query($sql);
             color: #0C2D57;
         }
 
-        header {
-            margin: 0;
-            background-color: transparent;
-            width: 100%;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            flex-direction: row;
-        }
-
-        .u-logo {
-            margin-top: 20px;
-        }
-
-        .logo {
-            height: 100px;
-            width: 100px;
-            margin: 10px 20px;
-            border-radius: 20px;
-        }
-
         .bg-primary {
             background-color: #0C2D57 !important;
         }
@@ -158,7 +136,9 @@ $result = $conn->query($sql);
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 
 </html>

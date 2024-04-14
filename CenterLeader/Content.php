@@ -1,5 +1,12 @@
 <?php
 session_start();
+
+// Check if leader is logged in
+if (!isset($_SESSION['leader_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
 include('../php/dbConnect.php');
 
 // Check if the leader is not logged in, redirect to the login page

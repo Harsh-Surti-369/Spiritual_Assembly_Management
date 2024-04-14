@@ -50,7 +50,6 @@ $stmt->bind_param("si", $category, $center_id);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -58,23 +57,58 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spiritual Videos</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/Devotee/vpravachan.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        :root {
+            --primary-color: #0C2D57;
+            --secondary-color: #FC6736;
+            --accent-color: #FFB0B0;
+            --light-color: #EFECEC;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+
+        .video {
+            background-color: var(--light-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .video-title {
+            color: var(--secondary-color);
+        }
+
+        .video-description {
+            color: var(--primary-color);
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+        }
+    </style>
 </head>
 
 <body>
-    <header>
-        <h1>Spiritual Video</h1>
-    </header>
+    <?php include('header.php'); ?>
 
-    <div class="container">
-        <!-- Your existing HTML code -->
+
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Watch the Pravachan in Video</h2>
         <div id="video-list">
-            <?php
-            while ($row = $result->fetch_assoc()) {
+            <?php while ($row = $result->fetch_assoc()) {
                 $file_path = $row['file_path'];
                 $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
-
                 // Check if the file extension is allowed (video format)
                 if (in_array($file_extension, $allowed_extensions)) {
                     $title = $row['title'];
@@ -95,17 +129,14 @@ $result = $stmt->get_result();
     </div>
 
     <script>
-        function playVideo(videoId) {
-            window.location.href = 'video_player.php?id=' + videoId;
-        }
-    </script>
-
-    <script>
         function playVideo(id, title, description, filePath) {
             // Redirect to the video player page with video details as URL parameters
             window.location.href = `video_player.php?id=${id}&title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&file_path=${encodeURIComponent(filePath)}`;
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 
 </html>

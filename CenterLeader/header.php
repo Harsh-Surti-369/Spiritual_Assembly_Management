@@ -17,7 +17,7 @@
                             <a class="nav-link" aria-current="page" href="index.php">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="dashbpard.php">Dashboard</a>
+                            <a class="nav-link" aria-current="page" href="dashboard.php">Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="content.php">Bhajan/Pravachan</a>

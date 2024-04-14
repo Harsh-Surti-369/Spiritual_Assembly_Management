@@ -65,7 +65,8 @@ if ($row_center = $result_center->fetch_assoc()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pravachan List</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -174,6 +175,7 @@ if ($row_center = $result_center->fetch_assoc()) {
 </head>
 
 <body>
+    <?php include('header.php'); ?>
     <div class="container mt-3">
         <h1>Pravachan List</h1>
         <form method="GET" action="" class="form-inline mb-3">
@@ -185,10 +187,7 @@ if ($row_center = $result_center->fetch_assoc()) {
                     <option value="desc">Newest First</option>
                 </select>
             </div>
-            <div class="form-group mr-2">
-                <input type="text" class="form-control" id="singer-filter" name="singer" placeholder="Search by Speaker or title">
-            </div>
-            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <button type="submit" class="btn btn-primary m-2">Apply Filters</button>
         </form>
 
         <div id="bhajan-list">
@@ -219,8 +218,9 @@ if ($row_center = $result_center->fetch_assoc()) {
         </div>
 
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $(document).ready(function() {
             var audioElements = $('audio.bhajan-audio');

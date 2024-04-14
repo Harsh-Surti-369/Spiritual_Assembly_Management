@@ -8,21 +8,11 @@
   <link rel="stylesheet" href="nicepage.css" media="screen">
   <link rel="stylesheet" href="Page-1.css" media="screen">
   <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
   <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700|Playfair+Display:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Roboto+Slab:100,200,300,400,500,600,700,800,900|Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
 
   <style>
-    header {
-      background-color: transparent;
-      width: 100%;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      flex-direction: row;
-    }
-
     .hp {
       height: 750px;
     }
@@ -188,7 +178,6 @@
       </div>
     </div>
   </section>
-  <h1>Lifetime Sabha Attendance</h1>
   <div id="chartContainer"></div>
 
   <section class="u-align-center u-clearfix u-container-align-center u-image u-section-6" id="sec-ab10" data-image-width="1920" data-image-height="1080">
@@ -199,7 +188,7 @@
             <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-align-center u-border-2 u-border-palette-1-base u-file-icon u-hover-feature u-icon u-icon-circle u-text-palette-1-base u-icon-1"><img src="images/29302-df30e304.png" alt=""></span>
               <h3 class="u-align-center u-text u-text-default u-text-1">Book's </h3>
               <p class="u-align-center u-text u-text-2">Read spiritual Books</p>
-              <a href="books.php" class="btn btn-primary btn-gradient">
+              <a href="books.php" class="btn btn-primary btn-gradient" style="background-color:#0C2D57;">
                 read
               </a>
             </div>
@@ -209,7 +198,7 @@
               <h3 class="u-align-center u-text u-text-default u-text-3">Audio </h3>
               <p class="u-align-center u-text u-text-4">Listen audio bhajans and pravachans</p>
               <div class="btn-group">
-                <button class="btn btn-primary btn-gradient dropdown-toggle-split" type="button" data-toggle="dropdown" aria-expanded="false">
+                <button style="background-color:#0C2D57;" class="btn btn-primary btn-gradient dropdown-toggle-split" type="button" data-toggle="dropdown" aria-expanded="false">
                   listen
                 </button>
                 <div class="dropdown-menu">
@@ -224,7 +213,7 @@
               <h3 class="u-align-center u-text u-text-default u-text-5">Video </h3>
               <p class="u-align-center u-text u-text-6">Watch video and pravachan </p>
               <div class="btn-group">
-                <button class="btn btn-primary btn-gradient dropdown-toggle-split" type="button" data-toggle="dropdown" aria-expanded="false">
+                <button style="background-color:#0C2D57;" class="btn btn-primary btn-gradient dropdown-toggle-split" type="button" data-toggle="dropdown" aria-expanded="false">
                   watch
                 </button>
                 <div class="dropdown-menu">

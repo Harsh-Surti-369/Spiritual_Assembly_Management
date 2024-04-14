@@ -1,4 +1,11 @@
-<?php session_start(); ?>
+<?php session_start();
+// Check if leader is logged in
+if (!isset($_SESSION['leader_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 

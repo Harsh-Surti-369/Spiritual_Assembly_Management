@@ -1,5 +1,12 @@
 <?php
 session_start();
+
+// Check if leader is logged in
+if (!isset($_SESSION['leader_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
 include('../php/dbConnect.php');
 
 // Get the selected period from the URL
@@ -16,13 +23,12 @@ $startDate = date('Y-m-d', strtotime('-30 days')); // 30 days before today
 $endDate = date('Y-m-d'); // Today's date
 
 // Fetch attendance data for the selected period
-$sql = "SELECT COUNT(*) AS total_sabhas, 
-                SUM(CASE WHEN a.attendance_status = 'Present' THEN 1 ELSE 0 END) AS present_count
-            FROM tbl_sabha s
-            LEFT JOIN tbl_attendance a ON s.sabha_id = a.sabha_id AND a.devotee_id = ?
-            WHERE s.center_id = ? AND DATE_FORMAT(s.date, '%Y-%m-%d') BETWEEN ? AND ?";
+$sql = "SELECT COUNT(*) AS total_sabhas, SUM(CASE WHEN a.attendance_status = 'Present' THEN 1 ELSE 0 END) AS present_count
+            FROM tbl_attendance a
+            JOIN tbl_sabha s ON a.sabha_id = s.sabha_id
+            WHERE a.devotee_id = ? AND s.date BETWEEN ? AND ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("iiss", $devotee_id, $_SESSION['center_id'], $startDate, $endDate);
+$stmt->bind_param("iss", $devotee_id, $startDate, $endDate);
 
 if ($stmt->execute()) {
     $result = $stmt->get_result();
@@ -40,16 +46,14 @@ if ($stmt->execute()) {
     error_log("Error executing SQL query: " . $stmt->error);
 }
 
-// Prepare chart data
+// Prepare chart data for Pie Chart
 $dataPointsPie = array(
     array("label" => "Present", "y" => $attendancePercentage),
     array("label" => "Absent", "y" => 100 - $attendancePercentage)
 );
 
-// Prepare column chart data
+// Prepare chart data for Column Chart
 $dataPointsColumn = array();
-
-// Fetch sabha attendance data for the last 12 months
 $currentDate = new DateTime();
 for ($i = 0; $i < 12; $i++) {
     $currentDate->modify("-1 month");
@@ -77,8 +81,10 @@ for ($i = 0; $i < 12; $i++) {
         array_push($dataPointsColumn, array("label" => DateTime::createFromFormat('!m', $month)->format('F'), "y" => 0));
     }
 }
+
 $dataPoints = array();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -97,8 +103,8 @@ $dataPoints = array();
         <div class="row">
             <div class="col-12">
                 <!-- Pie Chart Component -->
-                <h1>Pie Chart</h1>
-                <div id="chartContainerPie" style="height: 370px; width: 100%;"></div>
+                <!-- <h1>Pie Chart</h1> -->
+                <div id="chartContainerPie" style="height: 0; width:0;"></div>
             </div>
         </div>
         <div class="row mt-4">
@@ -111,7 +117,7 @@ $dataPoints = array();
         <div class="row mt-4">
             <div class="col-12">
                 <!-- List Component -->
-                <h1>Sabhas wise data</h1>
+                <!-- <h1>Sabhas wise data</h1> -->
                 <div id="sabhaDetailsComponent">
                     <?php
                     // Fetch sabha details and attendance status for the selected period
@@ -138,13 +144,13 @@ $dataPoints = array();
                             $description = $row['description'];
 
                             // Output sabha details in HTML format
-                            echo "<div class='sabha-details'>
-                                <h3 class='title'>$sabhaTitle</h3>
-                                <p><strong>Date:</strong> $sabhaDate</p>
-                                <p><strong>Speaker:</strong> $sabhaSpeaker</p>
-                                <p class='status'><strong>Attendance Status:</strong> $attendanceStatus</p>
-                                <p><strong>Description:</strong> $description</p>
-                            </div>";
+                            // echo "<div class='sabha-details'>
+                            //     <h3 class='title'>$sabhaTitle</h3>
+                            //     <p><strong>Date:</strong> $sabhaDate</p>
+                            //     <p><strong>Speaker:</strong> $sabhaSpeaker</p>
+                            //     <p class='status'><strong>Attendance Status:</strong> $attendanceStatus</p>
+                            //     <p><strong>Description:</strong> $description</p>
+                            // </div>";
                         }
                     } else {
                     }

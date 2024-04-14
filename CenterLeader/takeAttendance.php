@@ -2,6 +2,12 @@
 session_start();
 include('../php/dbConnect.php');
 
+// Check if leader is logged in
+if (!isset($_SESSION['leader_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
 $messages = array(); // Array to store all messages
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -55,7 +61,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

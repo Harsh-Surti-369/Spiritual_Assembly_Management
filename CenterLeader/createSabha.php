@@ -1,5 +1,12 @@
 <?php
 session_start();
+
+// Check if leader is logged in
+if (!isset($_SESSION['leader_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
 require('../php/dbConnect.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

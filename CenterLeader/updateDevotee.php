@@ -24,7 +24,9 @@ if (isset($_GET['devotee_id'])) {
             $update_query = "UPDATE tbl_devotee SET name='$name', email='$email', mobile_number='$mobile_number', dob='$dob', gender='$gender' WHERE devotee_id=$devotee_id";
 
             if ($conn->query($update_query) === TRUE) {
-                echo "<div class='alert alert-success' role='alert'>Devotee details updated successfully</div>";
+                $_SESSION['update_success'] = true; // Set session variable upon successful update
+                header("Location: updateDevotee.php?devotee_id=$devotee_id"); // Redirect to clear POST data
+                exit();
             } else {
                 echo "Error updating devotee details: " . $conn->error;
             }
@@ -57,6 +59,16 @@ if (isset($_GET['devotee_id'])) {
     </header>
     <div class="container" stye="padding-top:50px;">
         <h2 class="my-4">Update Devotee</h2>
+        <?php
+        // Display success message if set in session
+        if (isset($_SESSION['update_success']) && $_SESSION['update_success']) {
+            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
+            echo 'Devotee details updated successfully';
+            echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+            echo '</div>';
+            unset($_SESSION['update_success']); // Clear session variable
+        }
+        ?>
         <form action="updateDevotee.php?devotee_id=<?php echo $devotee_id; ?>" method="post">
             <input type="hidden" name="devotee_id" value="<?php echo $devotee_id; ?>">
             <div class="form-group">
