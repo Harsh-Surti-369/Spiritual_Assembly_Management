@@ -13,31 +13,31 @@
   <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700|Playfair+Display:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Roboto+Slab:100,200,300,400,500,600,700,800,900|Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
 
   <style>
-    .hp {
-      height: 750px;
-    }
+  .hp {
+    height: 750px;
+  }
 
-    #chartContainer {
-      width: 60%;
-      margin: 50px auto;
-    }
+  #chartContainer {
+    width: 60%;
+    margin: 50px auto;
+  }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
 
-    .u-logo {
-      margin-top: 20px;
-    }
+  .u-logo {
+    margin-top: 20px;
+  }
 
-    .logo {
-      height: 100px;
-      width: 100px;
-      margin: 10px 20px;
-      border-radius: 20px;
-    }
-  </style>
+  .logo {
+    height: 100px;
+    width: 100px;
+    margin: 10px 20px;
+    border-radius: 20px;
+  }
+</style>
 </head>
 
 <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="false" class="u-body u-overlap u-overlap-transparent u-xl-mode" data-lang="en">
