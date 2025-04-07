@@ -1,4 +1,4 @@
-begin-commonstyles library* //*!
+/* begin-commonstyles library* //*!
 * froala_editor v4.0.6 (https: //www.froala.com/wysiwyg-editor)
   * License https: //froala.com/wysiwyg-editor/terms/
 
@@ -51459,4 +51459,4 @@ begin-commonstyles library* //*!
     font-size: 16px;
   }
 
-  /*end-variables base-font-size
+  /*end-variables base-font-size */
